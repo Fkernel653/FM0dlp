@@ -76,7 +76,7 @@ class FM0dlp:
 \033[01;37m{num}. \033[01;36mTitle: \033[01;0m'{title}'
 \033[01;35mChannel Title: \033[01;0m'{channel_title}'
 \033[01;34mCreation Date: \033[01;0m'{creation_date}'
-\033[01;31mURL: \033[01;37mhttps://www.youtube.com/watch?v={video_id}\033[01;0m
+\033[01;36mURL: \033[01;37mhttps://www.youtube.com/watch?v={video_id}\033[01;0m
 """
                     all_videos.append(video_info)  # Add formatted info to list
 
