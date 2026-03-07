@@ -17,7 +17,7 @@ class FM0dlp:
         Initialize the FM0dlp class with API credentials and user agent generator.
         Sets up the YouTube Data API endpoint and creates a UserAgent instance.
         """
-        self.api_key = ""  # YouTube Data API key (needs to be filled by user)
+        self.api_key = "YOUR_API_KEY_HERE"  # YouTube Data API key (needs to be filled by user)
         self.api = "https://www.googleapis.com/youtube/v3/search"  # YouTube API endpoint URL
         self.ua = UserAgent()  # Create UserAgent instance for generating random user agents
         
