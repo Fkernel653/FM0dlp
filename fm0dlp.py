@@ -124,14 +124,6 @@ class FM0dlp:
                     'preferredcodec': 'm4a',  # Convert to m4a audio format
                     'preferredquality': '192',  # Set audio quality to 192 kbps
                 }],
-
-                'remote_components': 'ejs:github',  # Remote components configuration
-
-                'extractor_args': {  # Additional extractor arguments
-                    'youtube': {
-                        'js_runtime': 'deno'  # Use deno JavaScript runtime for extraction
-                    }
-                },
                 "quiet": False  # Show download progress in console
             }
             
