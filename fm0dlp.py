@@ -21,7 +21,7 @@ class FM0dlp:
         self.api = "https://www.googleapis.com/youtube/v3/search"  # YouTube API endpoint URL
         self.ua = UserAgent()  # Create UserAgent instance for generating random user agents
         
-    def search(self, query, maxResults=10):
+    def search(self, query, maxResults=50):
         """
         Search for videos on YouTube using the official YouTube Data API.
         
