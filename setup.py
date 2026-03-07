@@ -214,7 +214,7 @@ def get_selections_menu():
         str: Formatted menu string with ANSI color codes
     """
     selections = """
-    1: \033[01;33mSearch\033[01;0m
+    1: \033[01;34mSearch\033[01;0m
     2: \033[01;32mDownload\033[01;0m
     3: \033[01;90mBoot path configuration\033[01;0m
     4: \033[01;31mExit\033[01;0m
