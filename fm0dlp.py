@@ -185,7 +185,7 @@ class FM0dlp:
                         return os.getcwd()  # Return current directory as fallback
             else:
                 # No configuration file exists
-                return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;3m{os.getcwd()}\033[01;3m"
+                return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;3m{os.getcwd()}\033[01;0m"
 
 def end():
     """
