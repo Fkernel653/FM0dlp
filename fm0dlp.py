@@ -161,7 +161,7 @@ class FM0dlp:
                 json.dump(config, f, ensure_ascii=False, indent=4)  # Pretty print JSON
 
             # Return success message with saved path
-            return f"\033[01;32mPath saved: \033[01;0m\033[01;3m{path}"
+            return f"\033[01;32mPath saved: \033[01;0m\033[01;3m{path}\033[01;0m"
 
         else:
             # No path provided - retrieve current configuration
@@ -238,7 +238,7 @@ a88aaaa    88   88   88 dP    dP .d8888b. dP .d8888b.
     # Handle user's menu selection
     if user_option == '1':
         # Search option selected
-        user_query = input("\033[01;37m\t\tEnter your query \033[01;0m")
+        user_query = input("\033[01;37m\t\tEnter your query: \033[01;0m")
         print(root.search(user_query))  # Perform search and display results
         end()  # Ask if user wants to continue
 
