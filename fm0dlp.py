@@ -207,7 +207,7 @@ def end():
     user_variant = input("\033[01;91m\tDo you want to continue? \033[01;0m(Y/n): ")
     
     # Check if user wants to continue (case-insensitive)
-    if user_variant.lower() == 'y:
+    if user_variant.lower() == 'y':
         main()  # Restart the main function
     else:
         clear()
