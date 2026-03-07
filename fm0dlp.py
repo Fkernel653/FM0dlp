@@ -19,7 +19,7 @@ class FM0dlp:
         """
         # YouTube Data API v3 key - required for search functionality
         # WARNING: This key is visible in the code, consider using environment variables for security
-        self.api_key = "AIzaSyBnWX6jA6qOqSVAo_vzsr6Nnpdg5NHFK5s"
+        self.api_key = "YOUR_API_KEY_HERE"
         # YouTube API endpoint URL for search operations
         self.api = "https://www.googleapis.com/youtube/v3/search"
         # Create UserAgent instance for generating random browser user agents
