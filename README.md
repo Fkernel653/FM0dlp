@@ -1,4 +1,3 @@
-```markdown
 # FM0dlp - YouTube Audio Downloader
 
 A powerful command-line tool for searching and downloading audio from YouTube videos. Built with Python, this tool combines the YouTube Data API for searching with yt-dlp for high-quality audio extraction.
