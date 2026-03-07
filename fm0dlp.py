@@ -89,7 +89,7 @@ class FM0dlp:
             
         except requests.exceptions.RequestException as e:
             # Handle network or request-related errors
-            return "\033[01;31m Request error:\033[01;0m {e}"
+            return f"\033[01;31m Request error:\033[01;0m {e}"
 
 
     def download_audio(self, url: str) -> None:
@@ -126,13 +126,17 @@ class FM0dlp:
                 }],
                 "quiet": False  # Show download progress in console
             }
-            
-            # Create YoutubeDL instance with configured options and download
-            with YoutubeDL(opts) as ydl:
-                ydl.download([url])  # Download the video and extract audio
-                
+
+            try:
+                # Create YoutubeDL instance with configured options and download
+                with YoutubeDL(opts) as ydl:
+                    ydl.download([url])  # Download the video and extract audio
+                    
                 # Return success message with download path
                 return f"\033[01;32m\tThe video was uploaded to: \033[01;0m\033[01;3m{saved_path}\033[01;0m"
+            
+            except Exception as e:
+                return f"\033[01;31mDownload error: \033[01;0m{e}"
 
 
     def download_path(self, path):
@@ -174,7 +178,7 @@ class FM0dlp:
 
                         # Check if path exists and is valid
                         if saved_path and Path(saved_path).exists():
-                            return f"\033[01;32mLoaded path: \033[01;0m\033[01;3m{saved_path}\033;01;0m"
+                            return f"\033[01;32mLoaded path: \033[01;0m\033[01;3m{saved_path}\033[01;0m"
                         else:
                             # Path invalid or not found, return current working directory
                             return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;03m{os.getcwd()}\033[01;0m"
@@ -203,7 +207,7 @@ def end():
     user_variant = input("\033[01;91m\tDo you want to continue? \033[01;0m(Y/n): ")
     
     # Check if user wants to continue (case-insensitive)
-    if user_variant == 'Y'.lower():
+    if user_variant.lower() == 'y:
         main()  # Restart the main function
     else:
         clear()
@@ -234,30 +238,30 @@ a88aaaa    88   88   88 dP    dP .d8888b. dP .d8888b.
     """
             print(banner)  # Display banner to user
 
-        # Get user's menu choice
-        user_option = input("\033[01;37m\tPlease enter your option: \033[01;0m")
+            # Get user's menu choice
+            user_option = input("\033[01;37m\tPlease enter your option: \033[01;0m")
+            
+            # Create instance of FM0dlp class
+            root = FM0dlp()
         
-        # Create instance of FM0dlp class
-        root = FM0dlp()
-    
-        # Handle user's menu selection
-        if user_option == '1':
-            # Search option selected
-            user_query = input("\033[01;37m\t\tEnter your query: \033[01;0m")
-            print(root.search(user_query))  # Perform search and display results
-            end()  # Ask if user wants to continue
-    
-        elif user_option == '2':
-            # Download option selected
-            user_url = input("\033[01;37m\t\tEnter the video link: \033[01;0m")
-            print(root.download_audio(user_url))  # Download audio from provided URL
-            end()  # Ask if user wants to continue
+            # Handle user's menu selection
+            if user_option == '1':
+                # Search option selected
+                user_query = input("\033[01;37m\t\tEnter your query: \033[01;0m")
+                print(root.search(user_query))  # Perform search and display results
+                end()  # Ask if user wants to continue
         
-        elif user_option == '3':
-            # Path configuration option selected
-            user_path = input("\033[01;37m\t\tEnter the download path: \033[01;0m")
-            print(root.download_path(user_path))  # Set or display download path
-            end()  # Ask if user wants to continue
+            elif user_option == '2':
+                # Download option selected
+                user_url = input("\033[01;37m\t\tEnter the video link: \033[01;0m")
+                print(root.download_audio(user_url))  # Download audio from provided URL
+                end()  # Ask if user wants to continue
+            
+            elif user_option == '3':
+                # Path configuration option selected
+                user_path = input("\033[01;37m\t\tEnter the download path: \033[01;0m")
+                print(root.download_path(user_path))  # Set or display download path
+                end()  # Ask if user wants to continue
 
     # Catch CTRL + C
     except KeyboardInterrupt:
