@@ -57,7 +57,6 @@ Create a `requirements.txt` file with:
 fake-useragent
 yt-dlp
 requests
-readline
 ```
 
 ## 🔧 Configuration
