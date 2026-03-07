@@ -187,6 +187,13 @@ class FM0dlp:
                 # No configuration file exists
                 return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;3m{os.getcwd()}\033[01;0m"
 
+def clear():
+    # Clean up and exit
+    os.system('cls' if os.name == 'nt' else 'clear')  # Clear screen (Windows vs Unix)
+    readline.clear_history()  # Clear command history
+    print("\033[01;32mGoodbye!\033[01;0m")  # Print goodbye message
+    exit(0)  # Exit program with success code
+
 def end():
     """
     Handle program termination and restart logic.
@@ -199,22 +206,20 @@ def end():
     if user_variant == 'Y'.lower():
         main()  # Restart the main function
     else:
-        # Clean up and exit
-        os.system('cls' if os.name == 'nt' else 'clear')  # Clear screen (Windows vs Unix)
-        readline.clear_history()  # Clear command history
-        print("\033[01;32mGoodbye!\033[01;0m")  # Print goodbye message
-        exit(0)  # Exit program with success code
+        clear()
 
 def main():
     """
     Main program entry point.
     Displays banner, handles user input, and routes to appropriate functionality.
     """
-    # Clear terminal screen (cls for Windows, clear for Unix-like systems)
-    os.system('cls' if os.name == 'nt' else 'clear')
+    try:
+        while True:
+            # Clear terminal screen (cls for Windows, clear for Unix-like systems)
+            os.system('cls' if os.name == 'nt' else 'clear')
     
-    # ASCII art banner with ANSI color codes
-    banner = """\033[01;31m
+            # ASCII art banner with ANSI color codes
+            banner = """\033[01;31m
  88888888b 8888ba.88ba                    oo         
  88        88  `8b  `8b                              
 a88aaaa    88   88   88 dP    dP .d8888b. dP .d8888b.
@@ -226,33 +231,37 @@ a88aaaa    88   88   88 dP    dP .d8888b. dP .d8888b.
     1: Search
     2: Download
     3: Boot path configuration
-"""
-    print(banner)  # Display banner to user
+    """
+            print(banner)  # Display banner to user
 
-    # Get user's menu choice
-    user_option = input("\033[01;37m\tPlease enter your option: \033[01;0m")
+        # Get user's menu choice
+        user_option = input("\033[01;37m\tPlease enter your option: \033[01;0m")
+        
+        # Create instance of FM0dlp class
+        root = FM0dlp()
     
-    # Create instance of FM0dlp class
-    root = FM0dlp()
-
-    # Handle user's menu selection
-    if user_option == '1':
-        # Search option selected
-        user_query = input("\033[01;37m\t\tEnter your query: \033[01;0m")
-        print(root.search(user_query))  # Perform search and display results
-        end()  # Ask if user wants to continue
-
-    elif user_option == '2':
-        # Download option selected
-        user_url = input("\033[01;37m\t\tEnter the video link: \033[01;0m")
-        print(root.download_audio(user_url))  # Download audio from provided URL
-        end()  # Ask if user wants to continue
+        # Handle user's menu selection
+        if user_option == '1':
+            # Search option selected
+            user_query = input("\033[01;37m\t\tEnter your query: \033[01;0m")
+            print(root.search(user_query))  # Perform search and display results
+            end()  # Ask if user wants to continue
     
-    elif user_option == '3':
-        # Path configuration option selected
-        user_path = input("\033[01;37m\t\tEnter the download path: \033[01;0m")
-        print(root.download_path(user_path))  # Set or display download path
-        end()  # Ask if user wants to continue
+        elif user_option == '2':
+            # Download option selected
+            user_url = input("\033[01;37m\t\tEnter the video link: \033[01;0m")
+            print(root.download_audio(user_url))  # Download audio from provided URL
+            end()  # Ask if user wants to continue
+        
+        elif user_option == '3':
+            # Path configuration option selected
+            user_path = input("\033[01;37m\t\tEnter the download path: \033[01;0m")
+            print(root.download_path(user_path))  # Set or display download path
+            end()  # Ask if user wants to continue
+
+    # Catch CTRL + C
+    except KeyboardInterrupt:
+        clear()
 
 # Standard Python idiom to ensure main() runs only when script is executed directly
 if __name__ == "__main__":
