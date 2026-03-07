@@ -98,6 +98,7 @@ python fm0dlp.py
 1: Search     - Search for videos on YouTube
 2: Download   - Download audio from a YouTube URL  
 3: Boot path configuration - Set or view download directory
+4: Exit - Leaving the program
 ```
 
 ### Search Videos
