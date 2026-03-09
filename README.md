@@ -89,7 +89,7 @@ Set your default download directory:
 
 Run the program:
 ```bash
-python fm0dlp.py
+python setup.py
 ```
 
 ### Main Menu
