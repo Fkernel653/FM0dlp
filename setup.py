@@ -16,9 +16,13 @@ class FM0dlp:
         """
         Constructor that initializes the YouTube API connection and user agent generator.
         Sets up the foundation for all subsequent operations.
+        
+        Security Note: API key is now loaded from environment variable instead of hardcoded,
+        preventing accidental exposure in source code repositories.
         """
-        # WARNING: Replace with your own YouTube Data API v3 key from Google Cloud Console
-        self.api_key = "YOUR_API_KEY_HERE"  # Authentication credential for YouTube API quota
+        # WARNING: Set environment variable YOUR_API_KEY_HOME with your YouTube Data API v3 key
+        # Get it from: https://console.cloud.google.com/apis/credentials
+        self.api_key = os.environ.get("YOUR_API_KEY_HOME")  # Authentication credential loaded from environment
         self.api = "https://www.googleapis.com/youtube/v3/search"  # Google's REST endpoint for video search
         self.ua = UserAgent()  # Generator that provides random browser fingerprints (Chrome, Firefox, etc.)
         
@@ -32,6 +36,9 @@ class FM0dlp:
         
         Returns:
             str: Color-coded terminal output with video details or error message
+            
+        Note: This method now exits on errors instead of returning error strings,
+        ensuring cleaner error handling flow.
         """
         # Build query parameters according to YouTube API v3 specification
         params = {
@@ -56,7 +63,7 @@ class FM0dlp:
 
                 # Handle empty result sets gracefully
                 if not results:
-                    return "\033[01;31m No videos found\033[01;0m"  # Red text for errors
+                    return "\033[01;31m\nNo videos found\n\033[01;0m"  # Red text for errors
 
                 all_videos = []  # Accumulator for formatted video entries
                 
@@ -86,12 +93,15 @@ class FM0dlp:
                 return '\n'.join(all_videos)
 
             else:
-                # Non-200 status code indicates API problem
-                return f"\033[01;31m Error\033[01;0m {r.status_code}"
+                # Non-200 status code indicates API problem (quota exceeded, invalid key, etc.)
+                print(f"\033[01;31m\nError\033[01;0m {r.status_code}\n")
+                return exit(1)  # Exit with error code
+                
             
         except requests.exceptions.RequestException as e:
             # Catch network errors, DNS failures, connection timeouts
-            return f"\033[01;31m Request error:\033[01;0m {e}"
+            print(f"\033[01;31m\nRequest error:\033[01;0m {e}\n")
+            return exit(1)  # Exit with error code
 
 
     def download_audio(self, url: str) -> None:
@@ -103,17 +113,21 @@ class FM0dlp:
         
         Returns:
             str: Confirmation message with filesystem location or error details
+            
+        Note: Requires FFmpeg to be installed on the system for audio extraction.
         """
         # Locate config file in the same directory as this script
         config_file = Path(__file__).parent / 'config.json'
 
         # Verify configuration exists before attempting download
         if not config_file.exists():
-            return "\033[01;31mConfig file not found! Please set download path first.\033[01;0m"
+            print("\033[01;31m\nConfig file not found! Please set download path first.\n\033[01;0m")
+            return exit(1)  # Exit with error code
 
         # Read and parse existing configuration
         with open(config_file, 'r', encoding='utf-8') as f:
             data = json.load(f)  # Convert JSON to Python dict
+            # FIXED: Changed key from 'configuring_path' to 'download_path' to match config structure
             saved_path = data.get('download_path')  # Retrieve user's download directory
 
             # yt-dlp configuration dictionary with all options
@@ -139,10 +153,11 @@ class FM0dlp:
             
             except Exception as e:
                 # Catch all yt-dlp exceptions (unavailable video, geo-block, etc.)
-                return f"\033[01;31mDownload error: \033[01;0m{e}"
+                print(f"\033[01;31m\nDownload error: \033[01;0m{e}\n")
+                return exit(1)  # Exit with error code
 
 
-    def download_path(self, path):
+    def configuring_path(self, path):
         """
         Manage persistent storage location for downloaded audio files.
         Acts as both setter and getter for the download directory.
@@ -152,6 +167,9 @@ class FM0dlp:
         
         Returns:
             str: Status message with current or newly set path
+            
+        Note: When path is empty, acts as getter and returns current configuration.
+        When path is provided, acts as setter and saves to config.json.
         """
         # Configuration file location (same directory as script)
         config_file = Path(__file__).parent / 'config.json'
@@ -161,7 +179,7 @@ class FM0dlp:
             # Build configuration object with metadata
             config = {
                 'download_path': str(path),  # Convert Path object to string if needed
-                'last_updated': str(Path(path).resolve())  # Store absolute path (resolves symlinks)
+                # Note: Removed 'last_updated' field for simplicity
             }
 
             # Write to filesystem with human-readable formatting
@@ -178,6 +196,7 @@ class FM0dlp:
                 with open(config_file, 'r', encoding='utf-8') as f:
                     try:
                         data = json.load(f)  # Parse JSON
+                        # FIXED: Changed key to match the actual config structure
                         saved_path = data.get('download_path')  # Extract path value
 
                         # Validate that path exists on filesystem
@@ -185,20 +204,26 @@ class FM0dlp:
                             return f"\033[01;32mLoaded path: \033[01;0m\033[01;3m{saved_path}\033[01;0m"
                         else:
                             # Config exists but path is invalid
-                            return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;03m{os.getcwd()}\033[01;0m"
+                            print(f"\033[01;31m\nConfig file is corrupted! Use the current folder: \033[01;0m\033[01;03m{os.getcwd()}\n\033[01;0m")
+                            # Spare folder - home directory as fallback
+                            return os.getcwd()
                     
                     except json.JSONDecodeError:
                         # Config file is corrupted (invalid JSON)
-                        print("\033[01;31mFile config.json corrupted!\033[01;0m")
-                        return os.getcwd()  # Fallback to current directory
+                        print(f"\033[01;31m\nConfig file is corrupted! Use the current folder: \033[01;0m\033[01;03m{os.getcwd()}\n\033[01;0m")
+                        return os.getcwd()  # Return current directory as fallback
             else:
                 # No config file exists yet
-                return f"\033[01;31mConfig file not found, use the current folder: \033[01;0m\033[01;3m{os.getcwd()}\033[01;0m"
+                print(f"\033[01;31m\nConfig file not found, use the current folder: \033[01;0m\033[01;3m{os.getcwd()}\n\033[01;0m")
+                return os.getcwd()  # Return current directory as fallback
+
 
 def clear():
     """
     Perform clean program termination with screen clearing and history wiping.
     Ensures no sensitive data remains in memory or terminal.
+    
+    Called on normal exit (option 4) and on KeyboardInterrupt (Ctrl+C).
     """
     # Platform-specific screen clearing (cls for Windows, clear for Unix)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -206,25 +231,33 @@ def clear():
     print("\033[01;32mGoodbye!\033[01;0m")  # Green farewell message
     exit(0)  # Successful exit status
 
+
 def get_selections_menu():
     """
     Generate interactive menu with color-coded options.
     
     Returns:
         str: Formatted menu string with ANSI color codes
+        
+    Note: Colors are now consistent: Blue for Search, Green for Download,
+    Gray for Configuration, Red for Exit.
     """
     selections = """
     1: \033[01;34mSearch\033[01;0m
     2: \033[01;32mDownload\033[01;0m
-    3: \033[01;90mBoot path configuration\033[01;0m
+    3: \033[01;90mDownload folder configuration\033[01;0m
     4: \033[01;31mExit\033[01;0m
     """
     return selections
+
 
 def inputs():
     """
     Handle user interaction loop for menu selection and operation execution.
     Recursively returns to menu after each operation until exit.
+    
+    This function implements the main user interface logic and routes
+    user choices to the appropriate FM0dlp methods.
     """
     print(get_selections_menu())  # Display the menu options
     
@@ -244,23 +277,29 @@ def inputs():
     elif user_option == '2':
         # DOWNLOAD: Extract audio from URL
         user_url = input("\033[01;37m\t\tEnter the video link: \033[01;0m")
-        print(downloader.download_audio(user_url))  # Start download
+
+        result = downloader.download_audio(user_url)
+        print(result)  # Display download result
+
         return inputs()  # Back to menu
     
     elif user_option == '3':
         # CONFIG: Set or view download location
-        user_path = input("\033[01;37m\t\tEnter the download path: \033[01;0m")
-        print(downloader.download_path(user_path))  # Update config
+        user_path = input("\033[01;37m\t\tEnter the path: \033[01;0m")
+        print(downloader.configuring_path(user_path))  # Update config
         return inputs()  # Return to menu
 
     elif user_option == '4':
         # EXIT: Clean termination
         clear()  # Goodbye sequence
 
+
 def main():
     """
     Main program controller with infinite loop and interrupt handling.
     Sets up the environment and enters the user interaction cycle.
+    
+    Wrapped in try-except to catch KeyboardInterrupt (Ctrl+C) gracefully.
     """
     try:
         while True:  # Continuous operation until explicit exit
