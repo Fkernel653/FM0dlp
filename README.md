@@ -8,7 +8,7 @@ A powerful command-line tool for searching and downloading audio from YouTube vi
 ## 📋 Features
 
 - **YouTube Video Search**: Search for videos using the official YouTube Data API
-- **High-Quality Audio Download**: Extract audio in M4A format at 192 kbps quality
+- **High-Quality Audio Download**: Extract audio in M4A format at 256 kbps quality
 - **Configurable Download Path**: Set and save your preferred download directory
 - **User-Friendly Interface**: Colorful terminal output with intuitive menu system
 - **Random User Agents**: Avoid detection by rotating user agents
@@ -145,7 +145,7 @@ The program uses ANSI color codes for better readability:
 ### Audio Quality
 
 - **Format**: M4A (AAC audio)
-- **Bitrate**: 192 kbps
+- **Bitrate**: 256 kbps
 - **Source**: Best available audio stream
 
 ### API Features
