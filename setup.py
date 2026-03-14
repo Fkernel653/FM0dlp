@@ -138,7 +138,7 @@ class FM0dlp:
                 'postprocessors': [{  # Array of post-processing steps
                     'key': 'FFmpegExtractAudio',  # Built-in FFmpeg audio extraction
                     'preferredcodec': 'm4a',  # Target format (AAC in MP4 container)
-                    'preferredquality': '192',  # Bitrate in kbps (balance quality/size)
+                    'preferredquality': '256',  # Bitrate in kbps (balance quality/size)
                 }],
                 "quiet": False  # Show detailed progress in terminal
             }
