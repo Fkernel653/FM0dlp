@@ -228,8 +228,9 @@ def clear():
     # Platform-specific screen clearing (cls for Windows, clear for Unix)
     os.system('cls' if os.name == 'nt' else 'clear')
     readline.clear_history()  # Remove all command history from memory
+
     print("\033[01;32mGoodbye!\033[01;0m")  # Green farewell message
-    exit(0)  # Successful exit status
+    return exit(0)  # Successful exit status
 
 
 def get_selections_menu():
@@ -291,7 +292,7 @@ def inputs():
 
     elif user_option == '4':
         # EXIT: Clean termination
-        clear()  # Goodbye sequence
+        return clear()  # Goodbye sequence
 
 
 def main():
@@ -322,7 +323,7 @@ a88aaaa    88   88   88 dP    dP .d8888b. dP .d8888b.
 
     # Handle Ctrl+C gracefully (no traceback)
     except KeyboardInterrupt:
-        clear()  # Clean shutdown on interrupt
+        return clear()  # Clean shutdown on interrupt
 
 # Standard Python guard to prevent execution on import
 if __name__ == "__main__":
