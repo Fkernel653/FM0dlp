@@ -323,7 +323,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **Fkernel653**
 - GitHub: [@Fkernel653](https://github.com/Fkernel653)
-- Project Repository: [FM0dlp](https://github.com/Fkernel653/FM0dlp)
+- Project Repository: [fm-dlp](https://github.com/Fkernel653/fm-dlp)
 
 ## 🙏 Acknowledgments
 
