@@ -1,0 +1,5 @@
+﻿fake-useragent
+python-dotenv
+requests
+yt-dlp
+clite
