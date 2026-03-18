@@ -47,8 +47,8 @@ brew install ffmpeg
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Fkernel653/FM0dlp.git
-cd FM0dlp
+git clone https://github.com/Fkernel653/fm-dlp.git
+cd fm-dlp
 ```
 
 2. Install required Python packages:
