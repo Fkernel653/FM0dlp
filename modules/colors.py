@@ -13,8 +13,10 @@ Usage Example:
 
 Note:
     - These escape sequences work on most Unix-like terminals (Linux, macOS)
-    - Windows terminals may require ANSI support (Windows 10+ with VT sequences)
-    - Not all terminals support the ITALIC style
+    - Windows terminals: require ANSI support (Windows 10 version 1511+ with VT sequences enabled)
+      Older Windows versions may not display colors correctly.
+    - Not all terminals support the ITALIC style (e.g., basic consoles may ignore it)
+    - Always use RESET after applying colors to prevent formatting from affecting subsequent output
 """
 
 # Reset all formatting to default (removes all styles and colors)
@@ -22,20 +24,14 @@ Note:
 RESET = "\033[01;0m"
 
 # Text styles - these modify the appearance regardless of color
-BOLD = "\033[01;1m"      # Bold/Bright text - used for numbers and URLs
-ITALIC = "\033[01;3m"    # Italic text (may not work in all terminals)
+BOLD = "\033[01;1m"  # Makes text thicker/brighter
+ITALIC = "\033[01;3m"  # Slanted text (may not render in all terminals)
 
 # Standard colors - each used consistently across the application
-RED = "\033[01;31m"      # Error messages, warnings, and video URLs
-GREEN = "\033[01;32m"    # Success messages, confirmations, and goodbye messages
-YELLOW = "\033[01;33m"   # Warnings and cautions (duration field)
-BLUE = "\033[01;34m"     # Information and dates (creation date field)
-MAGENTA = "\033[01;35m"  # Metadata and channel names (channel field)
-CYAN = "\033[01;36m"     # Titles and headings (video title field)
-
-# Color Usage by Module:
-#   searching.py: Uses all colors for formatted video information output
-#   downloader.py: Uses RED for errors, GREEN for success messages
-#   configer.py: Uses RED for errors, GREEN for success and configuration info
-#   helper.py: No direct color usage
-#   fm-dlp.py: No direct color usage (delegates to modules)
+RED = "\033[01;31m"  # Error messages, warnings, URLs
+GREEN = "\033[01;32m"  # Success messages, confirmations
+YELLOW = "\033[01;33m"  # Warnings, non-critical notices
+BLUE = "\033[01;34m"  # Informational messages
+MAGENTA = "\033[01;35m"  # Alternative highlight color
+CYAN = "\033[01;36m"  # Search result numbering, section headers
+GRAY = "\033[01;90m"  # Metadata labels, decorative characters (├─ └─)

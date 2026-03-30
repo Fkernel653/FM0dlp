@@ -57,10 +57,10 @@ def configuring_path(path: str) -> str:
         # Write configuration to filesystem with human-readable formatting
         with open(config_file, "w", encoding="utf-8") as f:
             json.dump(
-                config, 
-                f, 
+                config,
+                f,
                 ensure_ascii=False,  # Allow Unicode characters in paths
-                indent=4             # Pretty print with 4-space indentation
+                indent=4,  # Pretty print with 4-space indentation
             )
 
         # Confirm successful save with the config file location

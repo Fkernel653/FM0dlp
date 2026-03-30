@@ -14,7 +14,7 @@ Requirements:
 from pathlib import Path
 from fake_useragent import UserAgent
 from yt_dlp import YoutubeDL
-from yt_dlp.utils import DownloadError, ExtractorError, GeoRestrictedError
+from yt_dlp.utils import DownloadError, ExtractorError
 from modules.colors import RESET, RED, GREEN
 import json
 
@@ -38,14 +38,16 @@ def download_audio(url: str) -> None:
 
     Returns:
         None: The function prints status messages to the console and exits
-              with appropriate error codes on failure.
+              with appropriate error codes on failure. Does not return any value.
 
     Note:
         - Requires FFmpeg to be installed on the system for audio extraction.
         - The download path must be configured first using the config command.
         - Audio is downloaded at 256 kbps bitrate in M4A format (AAC codec).
         - The configuration file is expected at ../config.json relative to
-          this module's location.
+          this module's location (project root directory).
+        - This function terminates the process with sys.exit() codes:
+          0 on success or user cancellation, 1 on configuration or download errors.
 
     Raises:
         SystemExit: Exits with code 1 on configuration or download errors,
@@ -69,7 +71,7 @@ def download_audio(url: str) -> None:
         try:
             data = json.load(f)
             saved_path = data.get("path")
-            
+
             # Validate that the saved path exists on the filesystem
             if not saved_path or not Path(saved_path).exists():
                 print(
@@ -77,7 +79,7 @@ def download_audio(url: str) -> None:
                     f"Please reconfigure with 'config <path>'.{RESET}\n"
                 )
                 return exit(1)
-                
+
         except json.JSONDecodeError:
             print(
                 f"{RED}\nConfig file is corrupted! Please reconfigure with 'config <path>'.{RESET}\n"
@@ -90,22 +92,22 @@ def download_audio(url: str) -> None:
 
     # yt-dlp configuration dictionary with all options
     opts = {
-        "user_agent": ua.random,           # Rotate fingerprints to avoid detection
-        "format": "bestaudio/best",        # Select highest quality audio stream
-        "outtmpl": f"{saved_path}/%(title)s.%(ext)s",  # Save pattern: title.extension
+        "user_agent": ua.random,  # Rotate fingerprints to avoid detection
+        "format": "bestaudio/best",  # Select highest quality audio stream available
+        "outtmpl": f"{saved_path}/%(title)s.%(ext)s",  # Save pattern: video_title.extension
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",  # Use FFmpeg for audio extraction
-                "preferredcodec": "m4a",      # Output format (AAC in MP4 container)
-                "preferredquality": "256",    # Bitrate in kbps (good quality/size balance)
+                "preferredcodec": "m4a",  # Output format (AAC in MP4 container)
+                "preferredquality": "256",  # Bitrate in kbps (good quality/size balance)
             }
         ],
-        "quiet": False,                    # Show detailed progress in terminal
-        "no_warnings": False,              # Display warnings for troubleshooting
+        "quiet": False,  # Show detailed progress in terminal
+        "no_warnings": False,  # Display warnings for troubleshooting
     }
 
     try:
-        # Context manager ensures proper cleanup of resources
+        # Context manager ensures proper cleanup of resources after download
         with YoutubeDL(opts) as ydl:
             # Download audio from the provided URL
             # ydl.download() expects a list, even for single videos
@@ -114,7 +116,7 @@ def download_audio(url: str) -> None:
             return exit(0)
 
     except DownloadError:
-        # General download failure (network issues, unavailable video, etc.)
+        # General download failure (network issues, unavailable video, age restriction, etc.)
         print(
             f"{RED}\nDownload error! The video may be unavailable, private, or restricted.{RESET}\n"
         )
@@ -128,15 +130,7 @@ def download_audio(url: str) -> None:
         )
         return exit(1)
 
-    except GeoRestrictedError:
-        # Video is blocked in the current country/region
-        print(
-            f"{RED}\nGeolocation error: This video is not available in your region. "
-            f"Please try using a different VPN server or proxy.\n{RESET}"
-        )
-        return exit(1)
-
     except KeyboardInterrupt:
-        # Handle Ctrl+C gracefully during download
+        # Handle Ctrl+C gracefully during download process
         print(f"{GREEN}\nDownload cancelled. Goodbye!\n{RESET}")
         return exit(0)
