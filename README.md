@@ -104,7 +104,7 @@ python fm-dlp.py search "your query here" --limit=10
 python fm-dlp.py search "your query here" --variable=soundcloud --limit=5
 
 # With result filtering (ensures query appears in title or channel)
-python fm-dlp.py search "Imagine Dragons" --enable_filter=true --limit=5
+python fm-dlp.py search "tokyona" --enable_filter=true --limit=5
 ```
 
 **Parameters:**
@@ -116,8 +116,8 @@ python fm-dlp.py search "Imagine Dragons" --enable_filter=true --limit=5
 **Examples:**
 ```bash
 python fm-dlp.py search "Sewerslvt" --limit=5
-python fm-dlp.py search "lofi hip hop" --variable=soundcloud --limit=3
-python fm-dlp.py search "classical piano" --enable_filter=true
+python fm-dlp.py search "breakcore" --variable=soundcloud --limit=3
+python fm-dlp.py search "ambient" --enable_filter=true
 ```
 
 Each result displays:
