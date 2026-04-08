@@ -374,13 +374,6 @@ Distributed under the MIT License. See `LICENSE` file for details.
 - [clite](https://pypi.org/project/clite/) - Simple CLI framework
 - [fake-useragent](https://github.com/hellysmile/fake-useragent) - User agent rotation
 
-## 📊 Version History
-
-- **v1.0.0** - Initial release with YouTube and SoundCloud support
-- **v1.1.0** - Added YouTube Music search
-- **v1.2.0** - Added metadata embedding for all formats
-- **v1.3.0** - Added FLAC and Opus support
-
 ## ⚠️ Disclaimer
 
 **For educational purposes only.** Users are responsible for complying with platform Terms of Service and applicable copyright laws. Download only content you have permission to download.
