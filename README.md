@@ -63,9 +63,6 @@ cd fm-dlp
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Or install with pip directly
-pip install yt-dlp mutagen soundcloud-v2 ytmusicapi fake-useragent clite
 ```
 
 ## 🔧 Configuration

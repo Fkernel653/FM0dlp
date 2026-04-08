@@ -1,7 +1,6 @@
 ﻿fake-useragent
 soundcloud-v2
 ytmusicapi
-shazamio
 mutagen
 yt-dlp
 clite
