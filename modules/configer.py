@@ -37,11 +37,17 @@ def configuring_path(path: str) -> None:
                             f"{GREEN}Configuration file: {RESET}{Path(config_file)}"
                         )
                     else:
-                        print(f"{RED}\nConfig file exists but the saved path is invalid or missing!\n{RESET}")
+                        print(
+                            f"{RED}\nConfig file exists but the saved path is invalid or missing!\n{RESET}"
+                        )
                         return exit(1)
                 except json.JSONDecodeError:
-                    print(f"{RED}\nConfig file is corrupted! Please reconfigure with 'config <path>'.\n{RESET}")
+                    print(
+                        f"{RED}\nConfig file is corrupted! Please reconfigure with 'config <path>'.\n{RESET}"
+                    )
                     return exit(1)
         else:
-            print(f"{RED}\nConfig file not found! Please set a download path first with 'config <path>'.\n{RESET}")
+            print(
+                f"{RED}\nConfig file not found! Please set a download path first with 'config <path>'.\n{RESET}"
+            )
             return exit(1)

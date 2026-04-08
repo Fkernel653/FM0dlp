@@ -22,27 +22,30 @@ fm_dlp = Clite(
 def search(
     query: str,
     limit: int = 10,
-    enable_filter: str = "False",
-    variable: str = "youtube",
+    variable: str = "yt-video",
 ):
     """
     Search for music on YouTube or SoundCloud.
-    
+
     Args:
         query: Search term
         limit: Max results (default: 10)
         enable_filter: Filter invalid results - "True"/"False" (default: "False")
         variable: Platform - "youtube" or "soundcloud" (default: "youtube")
     """
-    filter_bool = enable_filter.lower() in "True"
-    program = Search(query, limit, filter_bool)
+    program = Search(query, limit)
 
     match variable:
-        case "youtube":
-            for video_info in program.youtube():
+        case "yt-video":
+            for video_info in program.yt_video():
                 print(video_info)
 
+        case "yt-music":
+            for track_info in program.yt_music():
+                print(track_info)
+
         case "soundcloud":
+
             async def get_track_info():
                 async for track_info in program.soundcloud():
                     print(track_info)
@@ -60,7 +63,7 @@ def download(
 ):
     """
     Download audio from a YouTube video.
-    
+
     Args:
         url: YouTube video URL
         ffmpeg: Use FFmpeg (reserved, default: "True")
@@ -76,7 +79,7 @@ def download(
 def config(path: str):
     """
     Set or display the download directory configuration.
-    
+
     Args:
         path: Directory path. If empty, displays current config.
     """
