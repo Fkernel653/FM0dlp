@@ -4,7 +4,6 @@ Commands: search, download, config, help
 """
 
 from clite import Clite
-import asyncio
 
 from modules.search import Search
 from modules.download import Download
@@ -22,7 +21,7 @@ fm_dlp = Clite(
 def search(
     query: str,
     limit: int = 10,
-    variable: str = "yt-video",
+    platform: str = "yt-video",
 ):
     """
     Search for music on YouTube or SoundCloud.
@@ -31,11 +30,11 @@ def search(
         query: Search term
         limit: Max results (default: 10)
         enable_filter: Filter invalid results - "True"/"False" (default: "False")
-        variable: Platform - "youtube" or "soundcloud" (default: "youtube")
+        platform: Platform - "youtube" or "soundcloud" (default: "youtube")
     """
     program = Search(query, limit)
 
-    match variable:
+    match platform:
         case "yt-video":
             for video_info in program.yt_video():
                 print(video_info)
@@ -45,12 +44,8 @@ def search(
                 print(track_info)
 
         case "soundcloud":
-
-            async def get_track_info():
-                async for track_info in program.soundcloud():
-                    print(track_info)
-
-            asyncio.run(get_track_info())
+            for track_info in program.soundcloud():
+                print(track_info)
 
 
 @fm_dlp.command()
