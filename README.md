@@ -10,13 +10,13 @@ A powerful command-line tool for searching and downloading high-quality audio fr
 ## 📋 Features
 
 ### Search Capabilities
-- **YouTube Video Search**: Search using `yt-dlp` with rich metadata (views, duration, channel)
-- **YouTube Music Search**: Dedicated music search via `ytmusicapi` for song-only results
-- **SoundCloud Search**: Async search with 30-second timeout and track details
+- **YouTube-Video Search**: Search using `yt-dlp` with rich metadata (views, duration, channel)
+- **YouTube-Music Search**: Dedicated music search via `ytmusicapi` for song-only results
+- **SoundCloud Search**: Search from SoundCloud using `soundcloud-v2`
 
 ### Download Features
 - **High-Quality Audio Extraction**: Download best available audio stream
-- **Multiple Audio Formats**: M4A, MP3, FLAC, Opus via `--codec` parameter
+- **Multiple Audio Formats**: M4A, AAC, MP3, FLAC, Opus via `--codec` parameter
 - **Configurable Bitrate**: Adjust quality from 64-320 kbps with `--kbps`
 - **Automatic Metadata Embedding**: Adds title, artist, and album tags to downloaded files
 - **Thumbnail Embedding**: Album art automatically embedded into audio files
@@ -25,7 +25,6 @@ A powerful command-line tool for searching and downloading high-quality audio fr
 ### Configuration & UX
 - **Persistent Configuration**: Save download directory in `config.json`
 - **Colorful Terminal Output**: ANSI color codes for better readability
-- **Async Search Operations**: Non-blocking SoundCloud search with timeout
 - **Formatted Results**: Tree structure output with metadata
 - **Cross-Platform Support**: Works on Linux, macOS, and Windows
 
@@ -81,7 +80,7 @@ python fm-dlp.py config
 The path is saved in `config.json` in the project root:
 ```json
 {
-    "path": "/home/user/Music/Downloads"
+    "path": "/home/<YOUR_USERNAME>/Music"
 }
 ```
 
@@ -104,19 +103,19 @@ python fm-dlp.py <command> [arguments] [options]
 
 ```bash
 # YouTube video search (default)
-python fm-dlp.py search "your query" --limit=10
+python fm-dlp.py search "<YOUR QUERY>" --limit=10
 
 # YouTube Music search
-python fm-dlp.py search "your query" --variable=yt-music --limit=5
+python fm-dlp.py search "<YOUR QUERY>" --platfrom=yt-music --limit=5
 
 # SoundCloud search
-python fm-dlp.py search "your query" --variable=soundcloud --limit=5
+python fm-dlp.py search "<YOUR QUERY>" --platfrom=soundcloud --limit=5
 ```
 
 **Parameters:**
 - `query` (required) - Search term
 - `--limit` - Max results (default: 10)
-- `--variable` - Platform: `yt-video`, `yt-music`, or `soundcloud` (default: `yt-video`)
+- `--platfrom` - Platform: `yt-video`, `yt-music`, or `soundcloud` (default: `yt-video`)
 
 **Examples:**
 ```bash
@@ -124,10 +123,10 @@ python fm-dlp.py search "your query" --variable=soundcloud --limit=5
 python fm-dlp.py search "Sewerslvt"
 
 # Search YouTube Music
-python fm-dlp.py search "lofi hip hop" --variable=yt-music --limit=5
+python fm-dlp.py search "usedcvnt" --platfrom=yt-music --limit=5
 
 # Search SoundCloud
-python fm-dlp.py search "breakcore" --variable=soundcloud --limit=5
+python fm-dlp.py search "tokyona" --platfrom=soundcloud --limit=5
 ```
 
 **Output Example:**
@@ -135,7 +134,7 @@ python fm-dlp.py search "breakcore" --variable=soundcloud --limit=5
 1. Song Title
    ├─ Artist Name
    ├─ 1,234,567 views | 3:45
-   └─ https://youtu.be/VIDEO_ID
+   └─ https://youtu.be/<VIDEO_ID>
    ──────────────────────────────────────────────────
 ```
 
@@ -143,7 +142,7 @@ python fm-dlp.py search "breakcore" --variable=soundcloud --limit=5
 
 ```bash
 # Basic download (M4A, 256 kbps)
-python fm-dlp.py download "https://youtu.be/VIDEO_ID"
+python fm-dlp.py download "https://youtu.be/<VIDEO_ID>"
 
 # Custom format and quality
 python fm-dlp.py download "URL" --codec=mp3 --kbps=320
@@ -160,7 +159,7 @@ python fm-dlp.py download "URL" --codec=opus --kbps=128
 
 **Parameters:**
 - `url` (required) - YouTube video URL
-- `--codec` - Output format: `m4a`, `mp3`, `flac`, `opus` (default: `m4a`)
+- `--codec` - Output format: `m4a`, `aac`, `mp3`, `flac`, `opus` (default: `m4a`)
 - `--kbps` - Bitrate in kbps (default: 256)
 - `--cookies` - Browser for cookies: `chrome`, `firefox`, `edge`, `safari` (optional)
 - `--ffmpeg` - Reserved for future use (default: "True")
@@ -170,8 +169,9 @@ python fm-dlp.py download "URL" --codec=opus --kbps=128
 | Codec | Extension | Recommended Bitrate | Best For |
 |-------|-----------|---------------------|----------|
 | M4A (AAC) | .m4a | 256 kbps | General use, good quality/size |
+| AAC | .aac | 256 kbps | Apple ecosystem, streaming |
 | MP3 | .mp3 | 320 kbps | Maximum compatibility |
-| FLAC | .flac | variable (lossless) | Archiving, audiophiles |
+| FLAC | .flac | lossless | Archiving, audiophiles |
 | Opus | .opus | 128 kbps | Best compression, modern players |
 
 **Note:** Download path must be configured first with `config` command.
@@ -180,10 +180,10 @@ python fm-dlp.py download "URL" --codec=opus --kbps=128
 
 ```bash
 # Set download directory
-python fm-dlp.py config ~/Music/Downloads
+python fm-dlp.py config ~/Music
 
 # Windows path example
-python fm-dlp.py config "C:\Users\Username\Music\Downloads"
+python fm-dlp.py config "C:\Users\<YOUR_USERNAME>\Music"
 
 # View current configuration
 python fm-dlp.py config
@@ -194,9 +194,6 @@ python fm-dlp.py config
 ```bash
 # Full help menu
 python fm-dlp.py help
-
-# Quick help (if implemented)
-python fm-dlp.py --help
 ```
 
 ## 📁 Project Structure
@@ -226,7 +223,7 @@ fm-dlp/
 |----------|--------|---------|----------|
 | **YouTube Video** | yt-dlp flat extraction | `yt-dlp` | Views, duration, channel, URL |
 | **YouTube Music** | API search with filter | `ytmusicapi` | Song-only results, artists |
-| **SoundCloud** | Async wrapper with timeout | `soundcloud-v2` | Date, duration, artist, permalink |
+| **SoundCloud** | Search Wrapper with SoundCloud | `soundcloud-v2` | Date, duration, artist, permalink |
 
 ### Download Pipeline
 
@@ -239,15 +236,6 @@ fm-dlp/
 6. Add metadata tags (mutagen)
 7. Save to configured directory
 ```
-
-### Metadata Support by Format
-
-| Format | Library | Tags Added |
-|--------|---------|-------------|
-| M4A/MP4 | mutagen.mp4 | `\xa9nam`, `\xa9ART`, `\xa9alb` |
-| MP3 | mutagen.id3 | TIT2, TPE1, TALB |
-| FLAC | mutagen.flac | title, artist, album |
-| Opus | mutagen.oggopus | title, artist, album |
 
 ### Color Scheme
 
@@ -284,19 +272,19 @@ fm-dlp/
 
 ```bash
 # 1. Configure download directory
-python fm-dlp.py config ~/Music/Downloads
+python fm-dlp.py config ~/Music
 
 # 2. Search for a song
-python fm-dlp.py search "midnight city m83" --limit=3
+python fm-dlp.py search "tonight, lucar joins the hunt" --limit=3
 
 # Output:
-# 1. M83 - Midnight City
-#    ├─ M83
-#    ├─ 123,456,789 views | 4:03
-#    └─ https://youtu.be/dX3k_QDnzHE
+# 1. tonight, lucar joins the hunt
+#    ├─ Sqarz - Topic
+#    ├─ 395,424 views | 2:56
+#    └─ https://youtu.be/BB_d2-WVgXI
 
 # 3. Download the song in high-quality MP3
-python fm-dlp.py download https://youtu.be/dX3k_QDnzHE --codec=mp3 --kbps=320
+python fm-dlp.py download https://youtu.be/BB_d2-WVgXI --codec=mp3 --kbps=320
 
 # Output:
 # Download completed successfully!
@@ -306,20 +294,17 @@ python fm-dlp.py download https://youtu.be/dX3k_QDnzHE --codec=mp3 --kbps=320
 ### Advanced Examples
 
 ```bash
-# Download entire playlist (via URL)
-python fm-dlp.py download "https://youtube.com/playlist?list=PL..."
-
 # Age-restricted video with Firefox cookies
-python fm-dlp.py download "URL" --cookies=firefox
+python fm-dlp.py download "<YOUR_URL>" --cookies=firefox
 
 # Lossless FLAC for archiving
-python fm-dlp.py download "URL" --codec=flac
+python fm-dlp.py download "<YOUR_URL>" --codec=flac
 
 # Small file size with Opus
-python fm-dlp.py download "URL" --codec=opus --kbps=96
+python fm-dlp.py download "<YOUR_URL>" --codec=opus --kbps=96
 
 # Search YouTube Music for specific genre
-python fm-dlp.py search "chill synthwave" --variable=yt-music --limit=10
+python fm-dlp.py search "breakcore" --platfrom=yt-music --limit=10
 ```
 
 ## 🐛 Troubleshooting
@@ -377,18 +362,3 @@ Distributed under the MIT License. See `LICENSE` file for details.
 ## ⚠️ Disclaimer
 
 **For educational purposes only.** Users are responsible for complying with platform Terms of Service and applicable copyright laws. Download only content you have permission to download.
-
----
-
-### Quick Reference Card
-
-```bash
-# Common commands cheat sheet
-fm-dlp config ~/Music/Downloads          # Set download path
-fm-dlp search "song name"                 # Search YouTube
-fm-dlp download URL                       # Download as M4A 256kbps
-fm-dlp download URL --codec=mp3 --kbps=320  # Download as MP3
-fm-dlp help                               # Show help
-```
-
-**Star ⭐ this repository if you find it useful!**
