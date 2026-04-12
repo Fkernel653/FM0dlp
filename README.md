@@ -15,6 +15,7 @@ A powerful command-line tool for searching and downloading high-quality audio fr
 - **SoundCloud Search**: Search from SoundCloud using `soundcloud-v2`
 
 ### Download Features
+- **Parallel Downloads**: Download multiple URLs simultaneously with async support
 - **High-Quality Audio Extraction**: Download best available audio stream
 - **Multiple Audio Formats**: M4A, AAC, MP3, FLAC, Opus via `--codec` parameter
 - **Configurable Bitrate**: Adjust quality from 64-320 kbps with `--kbps`
@@ -32,7 +33,7 @@ A powerful command-line tool for searching and downloading high-quality audio fr
 
 ### Prerequisites
 
-- **Python 3.9 or higher** (uses `match` statement from Python 3.10+)
+- **Python 3.10 or higher** (uses `match` statement from Python 3.10+)
 - **FFmpeg** - Required for audio conversion and thumbnail embedding
 
 ### Install FFmpeg
@@ -84,6 +85,8 @@ The path is saved in `config.json` in the project root:
 }
 ```
 
+**Note:** The download directory must be configured before downloading any audio.
+
 ## 📖 Usage
 
 ```bash
@@ -95,7 +98,7 @@ python fm-dlp.py <command> [arguments] [options]
 | Command | Description |
 |---------|-------------|
 | `search` | Search for music across platforms |
-| `download` | Download audio from URL |
+| `download` | Download audio from one or more URLs |
 | `config` | Set or view download directory |
 | `help` | Display help menu |
 
@@ -106,16 +109,18 @@ python fm-dlp.py <command> [arguments] [options]
 python fm-dlp.py search "<YOUR QUERY>" --limit=10
 
 # YouTube Music search
-python fm-dlp.py search "<YOUR QUERY>" --platfrom=yt-music --limit=5
+python fm-dlp.py search "<YOUR QUERY>" --platform=yt-music --limit=5
 
 # SoundCloud search
-python fm-dlp.py search "<YOUR QUERY>" --platfrom=soundcloud --limit=5
+python fm-dlp.py search "<YOUR QUERY>" --platform=soundcloud --limit=5
 ```
 
 **Parameters:**
 - `query` (required) - Search term
 - `--limit` - Max results (default: 10)
-- `--platfrom` - Platform: `yt-video`, `yt-music`, or `soundcloud` (default: `yt-video`)
+- `--platform` - Platform: `yt-video`, `yt-music`, or `soundcloud` (default: `yt-video`)
+
+**Note:** The `all` platform is not currently implemented. Use specific platforms instead.
 
 **Examples:**
 ```bash
@@ -123,10 +128,10 @@ python fm-dlp.py search "<YOUR QUERY>" --platfrom=soundcloud --limit=5
 python fm-dlp.py search "Sewerslvt"
 
 # Search YouTube Music
-python fm-dlp.py search "usedcvnt" --platfrom=yt-music --limit=5
+python fm-dlp.py search "usedcvnt" --platform=yt-music --limit=5
 
 # Search SoundCloud
-python fm-dlp.py search "tokyona" --platfrom=soundcloud --limit=5
+python fm-dlp.py search "tokyona" --platform=soundcloud --limit=5
 ```
 
 **Output Example:**
@@ -144,11 +149,14 @@ python fm-dlp.py search "tokyona" --platfrom=soundcloud --limit=5
 # Basic download (M4A, 256 kbps)
 python fm-dlp.py download "https://youtu.be/<VIDEO_ID>"
 
+# Download multiple URLs (space-separated, quoted)
+python fm-dlp.py download "https://youtu.be/abc123 https://youtu.be/def456"
+
 # Custom format and quality
 python fm-dlp.py download "URL" --codec=mp3 --kbps=320
 
 # Lossless FLAC download
-python fm-dlp.py download "URL" --codec=flac --kbps=320
+python fm-dlp.py download "URL" --codec=flac
 
 # With browser cookies for age-restricted content
 python fm-dlp.py download "URL" --cookies=chrome
@@ -158,7 +166,7 @@ python fm-dlp.py download "URL" --codec=opus --kbps=128
 ```
 
 **Parameters:**
-- `url` (required) - YouTube video URL
+- `urls` (required) - Space-separated YouTube URLs (must be quoted)
 - `--codec` - Output format: `m4a`, `aac`, `mp3`, `flac`, `opus` (default: `m4a`)
 - `--kbps` - Bitrate in kbps (default: 256)
 - `--cookies` - Browser for cookies: `chrome`, `firefox`, `edge`, `safari` (optional)
@@ -237,6 +245,15 @@ fm-dlp/
 7. Save to configured directory
 ```
 
+### Metadata Support by Format
+
+| Format | Metadata Library | Tags Added |
+|--------|------------------|-------------|
+| M4A/AAC | mutagen.mp4 | `©nam` (title), `©ART` (artist), `©alb` (album) |
+| MP3 | mutagen.id3 | TIT2 (title), TPE1 (artist), TALB (album) |
+| FLAC | mutagen.flac | title, artist, album (Vorbis comments) |
+| Opus | mutagen.oggopus | title, artist, album (Ogg container) |
+
 ### Color Scheme
 
 | Color | Usage |
@@ -264,7 +281,7 @@ fm-dlp/
 ### System Dependencies
 
 - **FFmpeg** - Required for audio conversion and thumbnail embedding (must be in PATH)
-- **Python 3.9+** - Runtime environment
+- **Python 3.10+** - Runtime environment
 
 ## 🔥 Usage Examples
 
@@ -284,11 +301,11 @@ python fm-dlp.py search "tonight, lucar joins the hunt" --limit=3
 #    └─ https://youtu.be/BB_d2-WVgXI
 
 # 3. Download the song in high-quality MP3
-python fm-dlp.py download https://youtu.be/BB_d2-WVgXI --codec=mp3 --kbps=320
+python fm-dlp.py download "https://youtu.be/BB_d2-WVgXI" --codec=mp3 --kbps=320
 
 # Output:
-# Download completed successfully!
-# Metadata added successfully!
+# Starting: https://youtu.be/BB_d2-WVgXI
+# ✓ Downloaded: tonight, lucar joins the hunt
 ```
 
 ### Advanced Examples
@@ -303,8 +320,11 @@ python fm-dlp.py download "<YOUR_URL>" --codec=flac
 # Small file size with Opus
 python fm-dlp.py download "<YOUR_URL>" --codec=opus --kbps=96
 
+# Download multiple tracks at once
+python fm-dlp.py download "https://youtu.be/abc123 https://youtu.be/def456" --codec=mp3
+
 # Search YouTube Music for specific genre
-python fm-dlp.py search "breakcore" --platfrom=yt-music --limit=10
+python fm-dlp.py search "breakcore" --platform=yt-music --limit=10
 ```
 
 ## 🐛 Troubleshooting
@@ -320,6 +340,7 @@ python fm-dlp.py search "breakcore" --platfrom=yt-music --limit=10
 | **Metadata not added** | Check file permissions and format support |
 | **"No video found"** | Video may be private, deleted, or region-restricted |
 | **Invalid download path** | Ensure directory exists and is writable |
+| **Config file corrupted** | Delete `config.json` and reconfigure with `config <path>` |
 
 ### Debug Mode
 
