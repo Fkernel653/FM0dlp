@@ -1,28 +1,29 @@
-# download.py
 """
 YouTube audio downloader using yt-dlp with FFmpeg post-processing.
 """
 
-from modules.colors import RESET, RED, GREEN, YELLOW
-from modules.add_metadata import add_metadata
 from dataclasses import dataclass
 from pathlib import Path
 
-from yt_dlp import YoutubeDL
-from yt_dlp.utils import DownloadError, ExtractorError
 from fake_useragent import UserAgent
+import asyncio
+from yt_dlp import YoutubeDL
+
+from modules.add_metadata import add_metadata
+from modules.colors import GREEN, RED, RESET, YELLOW
+
+USER_AGENT = UserAgent().random
 
 
 @dataclass
 class Download:
     """Manages audio download operations from YouTube URLs."""
 
-    url: str
-    ua = UserAgent().random
+    urls: str
     this_file_folder = Path(__file__).parent
-    config_file = Path(this_file_folder).parent / "config.json"  # config one level up
+    config_file = Path(this_file_folder).parent / "config.json"
 
-    def validate_config_file(self) -> None:
+    def _validate_config_file(self) -> None:
         """Check if config file exists, exit if not found."""
         if not self.config_file.exists():
             print(
@@ -30,7 +31,7 @@ class Download:
             )
             return exit(1)
 
-    def saved_path(self) -> str:
+    def _withdrawal_of_the_path(self) -> str:
         """Read and validate download path from config file."""
         import json
 
@@ -48,78 +49,81 @@ class Download:
                 print(f"{RED}\nConfig file is corrupted! Please reconfigure.{RESET}\n")
                 return exit(1)
 
-    def normal(self, ffmpeg: str, codec: str, kbps: int, cookies: str) -> None:
-        """Download audio using yt-dlp with FFmpeg processing."""
-        self.validate_config_file()
+    async def classic(self, ffmpeg: str, codec: str, kbps: int, cookies: str):
+        """Download audio using yt-dlp with FFmpeg processing (parallel)."""
+        self._validate_config_file()
 
         opts = {
-            "user_agent": self.ua,
-            "format": "bestaudio/best",  # best available audio quality
-            "outtmpl": f"{self.saved_path()}/%(title)s.%(ext)s",  # output filename template
-            "writethumbnail": True,  # download thumbnail for embedding
+            "user_agent": USER_AGENT,
+            "format": "bestaudio/best",
+            "outtmpl": f"{self._withdrawal_of_the_path()}/%(title)s.%(ext)s",
+            "writethumbnail": True,
             "postprocessors": [
                 {
-                    "key": "FFmpegExtractAudio",  # convert to target codec
+                    "key": "FFmpegExtractAudio",
                     "preferredcodec": codec,
                     "preferredquality": str(kbps),
                 },
-                {
-                    "key": "EmbedThumbnail",  # embed thumbnail into audio file
-                },
+                {"key": "EmbedThumbnail"},
             ],
-            "cookiesfrombrowser": (cookies,)
-            if cookies
-            else None,  # use browser cookies for auth
+            "cookiesfrombrowser": cookies if cookies else None,
             "quiet": False,
             "no_warnings": False,
         }
 
-        try:
-            with YoutubeDL(opts) as ydl:
-                # Extract video info without downloading
-                info = ydl.extract_info(self.url, download=False)
+        loop = asyncio.get_event_loop()
+        urls_list = self.urls.split()
 
-                if not info:
-                    raise ExtractorError("No info extracted")
+        async def download_single_url(url: str):
+            def sync_download():
+                try:
+                    with YoutubeDL(opts) as ydl:
+                        info = ydl.extract_info(url, download=True)
 
-                # Perform actual download with post-processing
-                ydl.process_info(info)
+                        if not info:
+                            return f"{RED}\nFailed: {url}{RESET}"
 
-                filename = ydl.prepare_filename(info)  # get expected output path
+                        base_filename = ydl.prepare_filename(info)
+                        file_path = None
 
-                print(f"{GREEN}\nDownload completed successfully!{RESET}")
+                        for ext in [codec, "mp3", "m4a", "aac", "opus", "flac"]:
+                            test_path = Path(base_filename).with_suffix(f".{ext}")
+                            if test_path.exists():
+                                file_path = test_path
+                                break
 
-            # Verify file exists after download
-            file_path = Path(filename)
-            if not file_path.exists():
-                print(f"{RED}\nError: File not found at {file_path}{RESET}")
-                return exit(1)
+                        if not file_path or not file_path.exists():
+                            return f"{RED}\nFile not found: {url}{RESET}"
 
-            # Extract metadata from video info
-            title = info.get("title", "Unknown Title")
-            artist = info.get("uploader", info.get("channel", "Unknown Artist"))
-            album = info.get("album", info.get("channel"))
+                        title = info.get("title", "Unknown Title")
+                        artist = info.get(
+                            "uploader", info.get("channel", "Unknown Artist")
+                        )
+                        album = info.get("album", info.get("channel"))
 
-            # Add metadata tags to downloaded file
-            result = add_metadata(
-                file=file_path, codec=codec, title=title, artist=artist, album=album
-            )
+                        add_metadata(
+                            file=file_path,
+                            codec=codec,
+                            title=title,
+                            artist=artist,
+                            album=album,
+                        )
 
-            if result:
-                return f"{GREEN}Metadata added successfully!{RESET}\n"
-            else:
-                return f"{YELLOW}\nFile downloaded but metadata could not be added{RESET}\n"
+                        return f"{GREEN}✓ Downloaded: {title}{RESET}"
 
-        except DownloadError:
-            print(
-                f"{RED}\nDownload error! Video may be unavailable, private, or restricted.{RESET}\n"
-            )
-            return exit(1)
-        except ExtractorError:
-            print(
-                f"{RED}\nExtraction error! Unable to retrieve video information.{RESET}\n"
-            )
-            return exit(1)
-        except KeyboardInterrupt:
-            print(f"{GREEN}\nDownload cancelled. Goodbye!\n{RESET}")
-            return exit(0)
+                except Exception as e:
+                    return f"{RED}✗ Error ({url}): {e}{RESET}"
+
+            print(f"{YELLOW}Starting: {RESET}{url}")
+            result = await loop.run_in_executor(None, sync_download)
+            return result
+
+        tasks = [download_single_url(url) for url in urls_list]
+
+        for completed_task in asyncio.as_completed(tasks):
+            try:
+                result = await completed_task
+                yield result
+            except KeyboardInterrupt:
+                yield f"{GREEN}\nDownload cancelled.{RESET}\n"
+                break
