@@ -86,7 +86,7 @@ class Download:
                         base_filename = ydl.prepare_filename(info)
                         file_path = None
 
-                        for ext in [codec, "mp3", "m4a", "aac", "opus", "flac"]:
+                        for ext in [codec, "mp3", "m4a", "opus", "flac"]:
                             test_path = Path(base_filename).with_suffix(f".{ext}")
                             if test_path.exists():
                                 file_path = test_path
