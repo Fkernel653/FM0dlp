@@ -44,11 +44,12 @@ class Download:
             print(f"{RED}\nConfig file is corrupted! Please reconfigure.{RESET}\n")
             exit(1)
 
-    async def classic(self, ffmpeg: str, codec: str, kbps: int, cookies: str):
+    async def classic(self, ffmpeg: str, codec: str, kbps: int, cookies: str, proxy: str):
         """Download audio using yt-dlp with FFmpeg processing (parallel)."""
         self._validate_config_file()
 
         opts = {
+            "proxy": proxy if proxy else None,
             "format": "bestaudio/best",
             "outtmpl": f"{self._withdrawal_of_the_path()}/%(title)s.%(ext)s",
             "writethumbnail": True,

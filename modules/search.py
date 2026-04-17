@@ -20,11 +20,25 @@ class Search:
 
     query: str
     limit: int
+    proxy: str
+
+    def get_duration(self, target, withdrawn, x, y):
+        try:
+            raw_duration = target.get(withdrawn)
+        except AttributeError:
+            raw_duration = getattr(target, withdrawn)
+        if raw_duration:
+            minutes = int(raw_duration // x)
+            seconds = int(raw_duration % y)
+            return f"{minutes}:{seconds:02d}"
+        else:
+            return "N/A"
 
     def yt_video(self):
         """Search YouTube videos using yt-dlp."""
         try:
             opts = {
+                "proxy": self.proxy if self.proxy else None,
                 "quiet": True,
                 "extract_flat": True,
                 "cachedir": False,
@@ -58,18 +72,12 @@ class Search:
                 else:
                     views = "N/A"
 
-                duration_sec = video.get("duration")
-                if duration_sec:
-                    minutes = int(duration_sec // 60)
-                    seconds = int(duration_sec % 60)
-                    duration_str = f"{minutes}:{seconds:02d}"
-                else:
-                    duration_str = "N/A"
+                duration = self.get_duration(video, "duration", 60, 60)
 
                 video_info = (
                     f"\n\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}\n"
                     f"   {GRAY}├─ {RESET}{channel}\n"
-                    f"   {GRAY}├─ {RESET}{views} {SEPARATE} {duration_str}\n"
+                    f"   {GRAY}├─ {RESET}{views} {SEPARATE} {duration}\n"
                     f"   {GRAY}└─ {RESET}{RED}https://youtu.be/{video_id}{RESET}\n"
                     f"   {GRAY}   {'─' * 50}{RESET}"
                 )
@@ -82,7 +90,10 @@ class Search:
     def yt_music(self):
         """Search YouTube Music for song tracks only."""
         try:
-            yt = YTMusic()
+            yt_kwargs = {}
+            if self.proxy:
+                yt_kwargs["proxies"] = {"http": self.proxy, "https": self.proxy}
+            yt = YTMusic(**yt_kwargs)
             tracks = yt.search(query=self.query, limit=self.limit, filter="songs")
 
             if not tracks:
@@ -124,7 +135,11 @@ class Search:
         try:
             from fake_useragent import UserAgent
 
-            sc = SoundCloud(user_agent=UserAgent().random)
+            sc_kwargs = {"user_agent": UserAgent().random}
+            if self.proxy:
+                sc_kwargs["proxy"] = self.proxy
+
+            sc = SoundCloud(**sc_kwargs)
             tracks = islice(sc.search(query=self.query), self.limit)
 
             if not tracks:
@@ -143,13 +158,7 @@ class Search:
                 except AttributeError:
                     date = "N/A"
 
-                duration_ms = getattr(track, "duration")
-                if duration_ms:
-                    minutes = duration_ms // 60000
-                    seconds = (duration_ms % 60000) // 1000
-                    duration_str = f"{minutes}:{seconds:02d}"
-                else:
-                    duration_str = "N/A"
+                duration = self.get_duration(track, "duration", 60000, 60)
 
                 track_url = (
                     track.permalink_url
@@ -162,7 +171,7 @@ class Search:
                 track_info = (
                     f"\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}\n"
                     f"   {GRAY}├─ {RESET}{artist}\n"
-                    f"   {GRAY}├─ {RESET}{date} {SEPARATE} {duration_str}\n"
+                    f"   {GRAY}├─ {RESET}{date} {SEPARATE} {duration}\n"
                     f"   {GRAY}└─ {RESET}{RED}{track_url}{RESET}\n"
                     f"   {GRAY}   {'─' * 50}{RESET}\n"
                 )
