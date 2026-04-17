@@ -98,8 +98,8 @@ class Download:
 
                         title = info.get("title", "")
                         channel = info.get("channel", "")
-                        artist = info.get("uploader") or channel or ""
-                        album = info.get("album") or channel or ""
+                        artist = info.get("uploader") or channel
+                        album = info.get("album") or channel
 
                         try:
                             add_metadata(
