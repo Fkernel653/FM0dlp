@@ -23,6 +23,7 @@ def search(
     query: str,
     limit: int = 10,
     platform: Optional[str] = "yt-video",
+    proxy: Optional[str] = None,
 ):
     """
     Search for music on YouTube or SoundCloud.
@@ -31,10 +32,11 @@ def search(
         query: Search term
         limit: Max results (default: 10)
         platform: "yt-video", "yt-music", or "soundcloud" (default: "yt-video")
+        proxy: Proxy URL (e.g., http://proxy:port or socks5://proxy:port)
     """
     from modules.search import Search
 
-    program = Search(query, limit)
+    program = Search(query, limit, proxy)
 
     match platform:
         case "yt-video":
@@ -57,6 +59,7 @@ def download(
     codec: Optional[str] = "m4a",
     kbps: Optional[int] = 256,
     cookies: Optional[str] = None,
+    proxy: Optional[str] = None,
 ):
     """
     Download audio from YouTube URLs.
@@ -67,13 +70,14 @@ def download(
         codec: Output format - m4a, mp3, opus, flac (default: "m4a")
         kbps: Bitrate in kbps (default: 256)
         cookies: Browser for cookies - chrome, firefox, edge, etc. (optional)
+        proxy: Proxy URL (e.g., http://proxy:port or socks5://proxy:port)
     """
     from modules.download import Download
 
     program = Download(urls)
 
     async def async_download_classic():
-        async for result in program.classic(ffmpeg, codec, kbps, cookies):
+        async for result in program.classic(ffmpeg, codec, kbps, cookies, proxy):
             print(result)
 
     asyncio.run(async_download_classic())

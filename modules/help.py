@@ -28,30 +28,32 @@ class Help:
 
 {BOLD}{GREEN}COMMANDS:{RESET}
 
-{BOLD}{YELLOW}search <query> [--limit=<n>] [--platform=<platform>]{RESET}
+{BOLD}{YELLOW}search <query> [--limit=<n>] [--platform=<platform>] [--proxy=<url>]{RESET}
     {GRAY}Search for music across YouTube, YouTube Music, and SoundCloud{RESET}
     {GRAY}Options:{RESET}
         {CYAN}--limit=<n>{RESET}        {GRAY}Number of results to show (default: 10){RESET}
         {CYAN}--platform=<platform>{RESET}  {GRAY}Platform: yt-video, yt-music, soundcloud (default: yt-video){RESET}
-    {GRAY}Note:{RESET} {GRAY}'all' platform is currently not implemented; use specific platform instead.{RESET}
+        {CYAN}--proxy=<url>{RESET}       {GRAY}Proxy URL (e.g., http://proxy:port or socks5://proxy:port){RESET}
     {GRAY}Examples:{RESET}
         {CYAN}fm-dlp search "Sewerslvt"{RESET}
         {CYAN}fm-dlp search "usedcvnt" --limit=10 --platform=yt-music{RESET}
-        {CYAN}fm-dlp search "tokyona" --platform=yt-video --limit=3{RESET}
+        {CYAN}fm-dlp search "tokyona" --platform=yt-video --limit=3 --proxy=socks5://127.0.0.1:9050{RESET}
         {CYAN}fm-dlp search "drum and bass" --platform=soundcloud --limit=5{RESET}
 
-{BOLD}{YELLOW}download <urls> [--ffmpeg=<bool>] [--codec=<format>] [--kbps=<bitrate>] [--cookies=<browser>]{RESET}
+{BOLD}{YELLOW}download <urls> [--ffmpeg=<bool>] [--codec=<format>] [--kbps=<bitrate>] [--cookies=<browser>] [--proxy=<url>]{RESET}
     {GRAY}Download audio from one or more YouTube URLs (space-separated).{RESET}
     {GRAY}Supports parallel downloads and automatic metadata embedding.{RESET}
     {GRAY}Options:{RESET}
         {CYAN}--ffmpeg=<bool>{RESET}     {GRAY}Enable FFmpeg processing (default: "True"){RESET}
         {CYAN}--codec=<format>{RESET}    {GRAY}Output format: m4a, mp3, opus, flac (default: m4a){RESET}
         {CYAN}--kbps=<bitrate>{RESET}    {GRAY}Bitrate quality: 64-320 (default: 256){RESET}
-        {CYAN}--cookies=<browser>{RESET} {GRAY}Browser for cookies: chrome, firefox, edge, safari (optional){RESET}
+        {CYAN}--cookies=<browser>{RESET} {GRAY}Browser for cookies: chrome, firefox, edge, safari, etc. (optional){RESET}
+        {CYAN}--proxy=<url>{RESET}       {GRAY}Proxy URL (e.g., http://proxy:port or socks5://proxy:port){RESET}
     {GRAY}Examples:{RESET}
         {CYAN}fm-dlp download https://youtu.be/dWn5DBo33ds{RESET}
         {CYAN}fm-dlp download "https://youtu.be/abc123 https://youtu.be/def456" --codec=mp3 --kbps=320{RESET}
         {CYAN}fm-dlp download https://music.youtube.com/... --codec=flac --cookies=firefox{RESET}
+        {CYAN}fm-dlp download https://youtu.be/restricted --cookies=chrome --proxy=http://127.0.0.1:8080{RESET}
 
 {BOLD}{YELLOW}config <path>{RESET}
     {GRAY}Set or display the download directory configuration.{RESET}
@@ -78,6 +80,12 @@ class Help:
     {GRAY}• {RESET}{BOLD}fake-useragent{RESET} {GRAY}(For realistic HTTP headers){RESET}
     {GRAY}• {RESET}{BOLD}mutagen{RESET}     {GRAY}(For metadata embedding){RESET}
 
+{BOLD}{GREEN}PROXY SUPPORT:{RESET}
+    {GRAY}• {RESET}Both {BOLD}search{RESET} and {BOLD}download{RESET} commands support {CYAN}--proxy{RESET} argument.
+    {GRAY}• {RESET}Proxy URL format: {CYAN}protocol://host:port{RESET}
+    {GRAY}• {RESET}Supported protocols: {CYAN}http{RESET}, {CYAN}https{RESET}, {CYAN}socks5{RESET}, {CYAN}socks5h{RESET}
+    {GRAY}• {RESET}Example: {CYAN}--proxy=socks5://127.0.0.1:9050{RESET} (Tor network)
+
 {BOLD}{GREEN}NOTES:{RESET}
     {GRAY}• {RESET}Configuration is stored in {BOLD}config.json{RESET} {GRAY}next to the executable.{RESET}
     {GRAY}• {RESET}The download command supports multiple space-separated URLs with parallel async downloads.{RESET}
@@ -85,6 +93,7 @@ class Help:
     {GRAY}• {RESET}Thumbnails are embedded automatically when available via yt-dlp.{RESET}
     {GRAY}• {RESET}Cookies from browser can help bypass age restrictions or region blocks.{RESET}
     {GRAY}• {RESET}If config.json is missing or invalid, download will exit with an error.{RESET}
+    {GRAY}• {RESET}Proxy settings apply to all network requests during the operation.{RESET}
 
 {BOLD}{GREEN}EXAMPLES:{RESET}
     {GRAY}1. Search on YouTube video and download the first result:{RESET}
@@ -107,11 +116,14 @@ class Help:
     {GRAY}6. Search SoundCloud for ambient mixes:{RESET}
     {CYAN}fm-dlp search "ambient mix" --platform=soundcloud --limit=10{RESET}
 
+    {GRAY}7. Use Tor proxy for anonymous downloading:{RESET}
+    {CYAN}fm-dlp download https://youtu.be/example --proxy=socks5://127.0.0.1:9050{RESET}
+
 {BOLD}{MAGENTA}For issues, bugs, or feature requests, please report on GitHub.{RESET}
 {BOLD}{MAGENTA}Repository: https://github.com/Fkernel653/fm-dlp{RESET}
 """
 
-    def file_run(self):
+    def file_run(self) -> str:
         """Display compact colorful help when no command provided."""
         return f"""
 {BOLD}{CYAN}fm-dlp{RESET} {GRAY}— music download toolkit{RESET}
@@ -124,10 +136,15 @@ class Help:
     {YELLOW}config    {RESET}{GRAY}Set or view download directory{RESET}
     {YELLOW}help      {RESET}{GRAY}Show full documentation{RESET}
 
+{BOLD}{GREEN}Common Options:{RESET}
+    {CYAN}--proxy{RESET}     {GRAY}Use proxy for all requests (http://, socks5://){RESET}
+    {CYAN}--cookies{RESET}   {GRAY}Browser cookies for authentication{RESET}
+
 {BOLD}{GREEN}Examples:{RESET}
     {CYAN}fm-dlp search "sewerslvt" --limit=5 --platform=yt-music{RESET}
     {CYAN}fm-dlp download https://youtu.be/... --codec=mp3 --kbps=320{RESET}
     {CYAN}fm-dlp config ~/Music{RESET}
+    {CYAN}fm-dlp download URL --proxy=socks5://127.0.0.1:9050{RESET}
 
 {BOLD}{GRAY}Run {WHITE}fm-dlp help{GRAY} for complete manual{RESET}
     """
