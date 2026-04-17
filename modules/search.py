@@ -3,7 +3,6 @@ YouTube and SoundCloud search handlers.
 """
 
 from modules.colors import RESET, BOLD, RED, GREEN, CYAN, GRAY
-from fake_useragent import UserAgent
 from dataclasses import dataclass
 
 from yt_dlp import YoutubeDL
@@ -12,7 +11,6 @@ from soundcloud import SoundCloud
 
 from itertools import islice
 
-USER_AGENT = UserAgent().random
 SEPARATE = f"{GRAY}|{RESET}"
 
 
@@ -124,7 +122,9 @@ class Search:
     def soundcloud(self):
         """Search SoundCloud for tracks."""
         try:
-            sc = SoundCloud(user_agent=USER_AGENT)
+            from fake_useragent import UserAgent
+
+            sc = SoundCloud(user_agent=UserAgent().random)
             tracks = islice(sc.search(query=self.query), self.limit)
 
             if not tracks:

@@ -7,17 +7,18 @@ options, examples, and requirements. The help text is dynamically built to
 match the current implementation of search, download, and config commands.
 """
 
-from modules.colors import RESET, BOLD, GREEN, CYAN, YELLOW, MAGENTA, GRAY
+from modules.colors import RESET, BOLD, GREEN, CYAN, YELLOW, MAGENTA, WHITE, GRAY
 
 
-def message() -> str:
-    """Generate and return the complete help menu text.
+class Help:
+    def command(self) -> str:
+        """Generate and return the complete help menu text.
 
-    Returns:
-        str: Formatted help message with command descriptions, options,
-             examples, and system requirements.
-    """
-    return f"""
+        Returns:
+            str: Formatted help message with command descriptions, options,
+                examples, and system requirements.
+        """
+        return f"""
 {BOLD}{GREEN}DESCRIPTION:{RESET}
     {GRAY}A powerful CLI tool to search and download music from YouTube, YouTube Music,{RESET}
     {GRAY}and SoundCloud with automatic metadata embedding and format conversion.{RESET}
@@ -87,25 +88,46 @@ def message() -> str:
 
 {BOLD}{GREEN}EXAMPLES:{RESET}
     {GRAY}1. Search on YouTube video and download the first result:{RESET}
-       {CYAN}fm-dlp search "breakcore" --limit=3 --platform=yt-video{RESET}
-       {CYAN}fm-dlp download <URL_FROM_SEARCH>{RESET}
+    {CYAN}fm-dlp search "breakcore" --limit=3 --platform=yt-video{RESET}
+    {CYAN}fm-dlp download <URL_FROM_SEARCH>{RESET}
 
     {GRAY}2. High quality MP3 download from multiple URLs:{RESET}
-       {CYAN}fm-dlp download "URL1 URL2 URL3" --codec=mp3 --kbps=320{RESET}
+    {CYAN}fm-dlp download "URL1 URL2 URL3" --codec=mp3 --kbps=320{RESET}
 
     {GRAY}3. Lossless FLAC with custom download path:{RESET}
-       {CYAN}fm-dlp config ~/Music{RESET}
-       {CYAN}fm-dlp download https://youtu.be/example --codec=flac{RESET}
+    {CYAN}fm-dlp config ~/Music{RESET}
+    {CYAN}fm-dlp download https://youtu.be/example --codec=flac{RESET}
 
     {GRAY}4. Search only YouTube Music for a track:{RESET}
-       {CYAN}fm-dlp search "de kini" --platform=yt-music --limit=5{RESET}
+    {CYAN}fm-dlp search "de kini" --platform=yt-music --limit=5{RESET}
 
     {GRAY}5. Download with browser cookies to access age-restricted content:{RESET}
-       {CYAN}fm-dlp download https://youtu.be/restricted --cookies=chrome{RESET}
+    {CYAN}fm-dlp download https://youtu.be/restricted --cookies=chrome{RESET}
 
     {GRAY}6. Search SoundCloud for ambient mixes:{RESET}
-       {CYAN}fm-dlp search "ambient mix" --platform=soundcloud --limit=10{RESET}
+    {CYAN}fm-dlp search "ambient mix" --platform=soundcloud --limit=10{RESET}
 
 {BOLD}{MAGENTA}For issues, bugs, or feature requests, please report on GitHub.{RESET}
 {BOLD}{MAGENTA}Repository: https://github.com/Fkernel653/fm-dlp{RESET}
 """
+
+    def file_run(self):
+        """Display compact colorful help when no command provided."""
+        return f"""
+{BOLD}{CYAN}fm-dlp{RESET} {GRAY}— music download toolkit{RESET}
+
+{BOLD}{GREEN}Usage:{RESET} {BOLD}{WHITE}fm-dlp{RESET} {YELLOW}<command>{RESET} {GRAY}[arguments]{RESET} {CYAN}[options]{RESET}
+
+{BOLD}{GREEN}Commands:{RESET}
+    {YELLOW}search    {RESET}{GRAY}Find tracks on YouTube, YT Music, SoundCloud{RESET}
+    {YELLOW}download  {RESET}{GRAY}Download audio from URLs with metadata{RESET}
+    {YELLOW}config    {RESET}{GRAY}Set or view download directory{RESET}
+    {YELLOW}help      {RESET}{GRAY}Show full documentation{RESET}
+
+{BOLD}{GREEN}Examples:{RESET}
+    {CYAN}fm-dlp search "sewerslvt" --limit=5 --platform=yt-music{RESET}
+    {CYAN}fm-dlp download https://youtu.be/... --codec=mp3 --kbps=320{RESET}
+    {CYAN}fm-dlp config ~/Music{RESET}
+
+{BOLD}{GRAY}Run {WHITE}fm-dlp help{GRAY} for complete manual{RESET}
+    """

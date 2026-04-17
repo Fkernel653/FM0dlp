@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 
 
-def configuring_path(path: str) -> None:
+def configer(path: str) -> None:
     """
     Manage download directory storage.
     - With path: saves to config.json

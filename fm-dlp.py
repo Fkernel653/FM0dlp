@@ -3,19 +3,19 @@ CLI entry point for fm-dlp using Clite library.
 Commands: search, download, config, help
 """
 
+import sys
 from typing import Optional
 import asyncio
 
 from clite import Clite
-from modules.configer import configuring_path
-from modules.download import Download
-from modules.help import message
-from modules.search import Search
+from modules.help import Help
 
 fm_dlp = Clite(
     name="fm-dlp",
     description="Search and download music from YouTube and SoundCloud",
 )
+
+helper = Help()
 
 
 @fm_dlp.command()
@@ -32,6 +32,8 @@ def search(
         limit: Max results (default: 10)
         platform: "yt-video", "yt-music", or "soundcloud" (default: "yt-video")
     """
+    from modules.search import Search
+
     program = Search(query, limit)
 
     match platform:
@@ -66,6 +68,8 @@ def download(
         kbps: Bitrate in kbps (default: 256)
         cookies: Browser for cookies - chrome, firefox, edge, etc. (optional)
     """
+    from modules.download import Download
+
     program = Download(urls)
 
     async def async_download_classic():
@@ -80,17 +84,22 @@ def config(path: str):
     """
     Set or display the download directory configuration.
 
-    Args:
+    Args:q
         path: Directory path. If empty, displays current config.
     """
-    print(configuring_path(path))
+    from modules.configer import configer
+
+    print(configer(path))
 
 
 @fm_dlp.command()
 def help():
     """Display the help menu."""
-    print(message())
+    print(helper.command())
 
 
 if __name__ == "__main__":
-    fm_dlp()
+    if len(sys.argv) == 1:
+        print(helper.file_run())
+    else:
+        fm_dlp()
