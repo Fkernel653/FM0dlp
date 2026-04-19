@@ -1,15 +1,15 @@
-# fm-dlp — YouTube & SoundCloud Music Downloader
+# fm-dlp — YouTube Music Downloader
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-lightgrey)]()
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-261230?logo=ruff&logoColor=white)](https://docs.astral.sh/ruff/)
 
-A powerful CLI tool for searching and downloading high-quality audio from YouTube, YouTube Music, and SoundCloud with automatic metadata embedding.
+A powerful CLI tool for searching and downloading high-quality audio from YouTube and YouTube Music with automatic metadata embedding.
 
 ## ✨ Features
 
-- **Multi-platform Search** — YouTube, YouTube Music, SoundCloud
+- **Multi-platform Search** — YouTube, YouTube Music
 - **Parallel Downloads** — Async support for multiple URLs
 - **Multiple Formats** — M4A, MP3, FLAC, Opus with configurable bitrate
 - **Metadata Embedding** — Title, artist, album tags + thumbnail
@@ -43,13 +43,12 @@ python fm-dlp.py download "https://youtu.be/..." --codec=mp3 --kbps=320
 
 ### `search` — Find music
 ```bash
-python fm-dlp.py search <query> [--limit=10] [--platform={yt-video|yt-music|soundcloud}] [--proxy=URL]
+python fm-dlp.py search <query> [--limit=10] [--platform={yt-video|yt-music}] [--proxy=URL]
 ```
 | Platform | Description |
 |----------|-------------|
 | `yt-video` | YouTube videos (default) |
 | `yt-music` | YouTube Music songs only |
-| `soundcloud` | SoundCloud tracks |
 
 ### `download` — Download audio
 ```bash
@@ -94,7 +93,6 @@ fm-dlp/
 |------------|---------|
 | `yt-dlp` | YouTube extraction & download |
 | `mutagen` | Audio metadata tagging |
-| `soundcloud-v2` | SoundCloud API |
 | `ytmusicapi` | YouTube Music API |
 | `fake-useragent` | User agent rotation |
 | `clite` | CLI framework |
@@ -115,9 +113,6 @@ python fm-dlp.py download "URL" --cookies=firefox
 
 # Anonymous download via Tor
 python fm-dlp.py download "URL" --proxy=socks5://127.0.0.1:9050
-
-# Search with proxy
-python fm-dlp.py search "ambient" --platform=soundcloud --proxy=http://127.0.0.1:8080
 ```
 
 ## 🐛 Troubleshooting

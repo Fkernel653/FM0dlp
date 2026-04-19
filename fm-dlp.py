@@ -12,7 +12,7 @@ from modules.help import Help
 
 fm_dlp = Clite(
     name="fm-dlp",
-    description="Search and download music from YouTube and SoundCloud",
+    description="Search and download music from YouTube",
 )
 
 helper = Help()
@@ -26,12 +26,12 @@ def search(
     proxy: Optional[str] = None,
 ):
     """
-    Search for music on YouTube or SoundCloud.
+    Search for music on YouTube.
 
     Args:
         query: Search term
         limit: Max results (default: 10)
-        platform: "yt-video", "yt-music", or "soundcloud" (default: "yt-video")
+        platform: "yt-video" or "yt-music" (default: "yt-video")
         proxy: Proxy URL (e.g., http://proxy:port or socks5://proxy:port)
     """
     from modules.search import Search
@@ -46,11 +46,6 @@ def search(
         case "yt-music":
             for track_info in program.yt_music():
                 print(track_info)
-
-        case "soundcloud":
-            for track_info in program.soundcloud():
-                print(track_info)
-
 
 @fm_dlp.command()
 def download(

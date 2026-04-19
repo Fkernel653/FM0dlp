@@ -1,5 +1,4 @@
 ﻿fake-useragent
-soundcloud-v2
 ytmusicapi
 mutagen
 yt-dlp

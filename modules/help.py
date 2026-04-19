@@ -20,8 +20,8 @@ class Help:
         """
         return f"""
 {BOLD}{GREEN}DESCRIPTION:{RESET}
-    {GRAY}A powerful CLI tool to search and download music from YouTube, YouTube Music,{RESET}
-    {GRAY}and SoundCloud with automatic metadata embedding and format conversion.{RESET}
+    {GRAY}A powerful CLI tool to search and download music from YouTube and YouTube Music{RESET}
+    {GRAY}with automatic metadata embedding and format conversion.{RESET}
 
 {BOLD}{GREEN}USAGE:{RESET}
     {BOLD}fm-dlp <command> [arguments] [options]{RESET}
@@ -29,16 +29,15 @@ class Help:
 {BOLD}{GREEN}COMMANDS:{RESET}
 
 {BOLD}{YELLOW}search <query> [--limit=<n>] [--platform=<platform>] [--proxy=<url>]{RESET}
-    {GRAY}Search for music across YouTube, YouTube Music, and SoundCloud{RESET}
+    {GRAY}Search for music across YouTube and YouTube Music{RESET}
     {GRAY}Options:{RESET}
         {CYAN}--limit=<n>{RESET}        {GRAY}Number of results to show (default: 10){RESET}
-        {CYAN}--platform=<platform>{RESET}  {GRAY}Platform: yt-video, yt-music, soundcloud (default: yt-video){RESET}
+        {CYAN}--platform=<platform>{RESET}  {GRAY}Platform: yt-video, yt-music (default: yt-video){RESET}
         {CYAN}--proxy=<url>{RESET}       {GRAY}Proxy URL (e.g., http://proxy:port or socks5://proxy:port){RESET}
     {GRAY}Examples:{RESET}
         {CYAN}fm-dlp search "Sewerslvt"{RESET}
         {CYAN}fm-dlp search "usedcvnt" --limit=10 --platform=yt-music{RESET}
         {CYAN}fm-dlp search "tokyona" --platform=yt-video --limit=3 --proxy=socks5://127.0.0.1:9050{RESET}
-        {CYAN}fm-dlp search "drum and bass" --platform=soundcloud --limit=5{RESET}
 
 {BOLD}{YELLOW}download <urls> [--codec=<format>] [--kbps=<bitrate>] [--cookies=<browser>] [--proxy=<url>]{RESET}
     {GRAY}Download audio from one or more YouTube URLs (space-separated).{RESET}
@@ -75,7 +74,6 @@ class Help:
     {GRAY}• {RESET}{BOLD}FFmpeg{RESET}      {GRAY}(Required for audio conversion and thumbnail embedding){RESET}
     {GRAY}• {RESET}{BOLD}yt-dlp{RESET}      {GRAY}(Required for YouTube downloads and search){RESET}
     {GRAY}• {RESET}{BOLD}ytmusicapi{RESET}  {GRAY}(Required for YouTube Music search){RESET}
-    {GRAY}• {RESET}{BOLD}soundcloud-v2{RESET} {GRAY}(Required for SoundCloud search){RESET}
     {GRAY}• {RESET}{BOLD}Python 3.8+{RESET} {GRAY}(Required runtime){RESET}
     {GRAY}• {RESET}{BOLD}fake-useragent{RESET} {GRAY}(For realistic HTTP headers){RESET}
     {GRAY}• {RESET}{BOLD}mutagen{RESET}     {GRAY}(For metadata embedding){RESET}
@@ -113,10 +111,7 @@ class Help:
     {GRAY}5. Download with browser cookies to access age-restricted content:{RESET}
     {CYAN}fm-dlp download https://youtu.be/restricted --cookies=chrome{RESET}
 
-    {GRAY}6. Search SoundCloud for ambient mixes:{RESET}
-    {CYAN}fm-dlp search "ambient mix" --platform=soundcloud --limit=10{RESET}
-
-    {GRAY}7. Use Tor proxy for anonymous downloading:{RESET}
+    {GRAY}6. Use Tor proxy for anonymous downloading:{RESET}
     {CYAN}fm-dlp download https://youtu.be/example --proxy=socks5://127.0.0.1:9050{RESET}
 
 {BOLD}{MAGENTA}For issues, bugs, or feature requests, please report on GitHub.{RESET}
@@ -126,12 +121,12 @@ class Help:
     def file_run(self) -> str:
         """Display compact colorful help when no command provided."""
         return f"""
-{BOLD}{CYAN}fm-dlp{RESET} {GRAY}— YouTube & SoundCloud Music Downloader{RESET}
+{BOLD}{CYAN}fm-dlp{RESET} {GRAY}— YouTube Music Downloader{RESET}
 
 {BOLD}{GREEN}Usage:{RESET} {BOLD}{WHITE}fm-dlp{RESET} {YELLOW}<command>{RESET} {GRAY}[arguments]{RESET} {CYAN}[options]{RESET}
 
 {BOLD}{GREEN}Commands:{RESET}
-    {YELLOW}search    {RESET}{GRAY}Find tracks on YouTube, YT Music, SoundCloud{RESET}
+    {YELLOW}search    {RESET}{GRAY}Find tracks on YouTube and YT Music{RESET}
     {YELLOW}download  {RESET}{GRAY}Download audio from URLs with metadata{RESET}
     {YELLOW}config    {RESET}{GRAY}Set or view download directory{RESET}
     {YELLOW}help      {RESET}{GRAY}Show full documentation{RESET}
