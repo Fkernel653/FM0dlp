@@ -75,7 +75,7 @@ class Help:
     {GRAY}• {RESET}{BOLD}FFmpeg{RESET}      {GRAY}(Required for audio conversion and thumbnail embedding){RESET}
     {GRAY}• {RESET}{BOLD}yt-dlp{RESET}      {GRAY}(Required for YouTube downloads and search){RESET}
     {GRAY}• {RESET}{BOLD}ytmusicapi{RESET}  {GRAY}(Required for YouTube Music search){RESET}
-    {GRAY}• {RESET}{BOLD}soundcloud-lib{RESET} {GRAY}(Required for SoundCloud search){RESET}
+    {GRAY}• {RESET}{BOLD}soundcloud-v2{RESET} {GRAY}(Required for SoundCloud search){RESET}
     {GRAY}• {RESET}{BOLD}Python 3.8+{RESET} {GRAY}(Required runtime){RESET}
     {GRAY}• {RESET}{BOLD}fake-useragent{RESET} {GRAY}(For realistic HTTP headers){RESET}
     {GRAY}• {RESET}{BOLD}mutagen{RESET}     {GRAY}(For metadata embedding){RESET}
