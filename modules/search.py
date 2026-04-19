@@ -8,10 +8,8 @@ from dataclasses import dataclass
 from yt_dlp import YoutubeDL
 from ytmusicapi import YTMusic
 
-from itertools import islice
 
 SEPARATE = f"{GRAY}|{RESET}"
-
 
 @dataclass
 class Search:
@@ -100,6 +98,8 @@ class Search:
     def yt_music(self):
         """Search YouTube Music for song tracks only."""
         try:
+            from itertools import islice
+
             yt_kwargs = {}
             if self.proxy:
                 yt_kwargs["proxies"] = {"http": self.proxy, "https": self.proxy}
