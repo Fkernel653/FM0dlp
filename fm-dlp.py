@@ -71,7 +71,7 @@ def download(
     """
     if codec is None:
         codec = "m4a" if sys.platform == "darwin" else "opus"
-        
+
     from modules.download import Download
 
     program = Download(urls)

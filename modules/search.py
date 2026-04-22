@@ -53,13 +53,13 @@ class Search:
         """Format duration to HH:MM:SS, MM:SS, or SS depending on length."""
         if not raw_duration:
             return "N/A"
-        
+
         total_seconds = int(raw_duration)
-        
+
         hours = total_seconds // 3600
         minutes = (total_seconds % 3600) // 60
         seconds = total_seconds % 60
-        
+
         if hours > 0:
             return f"{hours}:{minutes:02d}:{seconds:02d}"
         else:
@@ -99,7 +99,7 @@ class Search:
         if artists and isinstance(artists, list):
             return artists[0].get("name", "Unknown Artist")
         return "Unknown Artist"
-    
+
     def _format_ytvideo(
         self, num, title, artist, views=None, duration=None, url=None
     ) -> str:
@@ -111,7 +111,7 @@ class Search:
             f"   {GRAY}└─ {RESET}{RED}{url}{RESET}\n"
             f"{DIVIDER}"
         )
-    
+
     def _format_ytmusic(
         self, num, title, artist, views=None, duration=None, year=None, url=None
     ) -> str:
