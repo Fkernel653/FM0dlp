@@ -58,13 +58,14 @@ python fm-dlp.py search <query> [--limit=10] [--platform={yt-video|yt-music}] [-
 
 ### `download` — Download audio
 ```bash
-python fm-dlp.py download <urls> [--codec={m4a|mp3|flac|opus}] [--kbps=256] [--cookies=browser] [--proxy=URL]
+python fm-dlp.py download <urls> [--codec={m4a|mp3|flac|opus}] [--kbps=256] [--quiet=False] [--max-concurrent=5] [--cookies=browser] [--proxy=URL]
 ```
 | Option | Values | Default |
 |--------|--------|---------|
 | `--codec` | m4a, mp3, flac, opus | m4a (macOS) / opus |
 | `--kbps` | 64–320 | 256 |
 | `--quiet` | True/False (flag) | False |
+| `--max-concurrent` | 1–∞ | 5 |
 | `--cookies` | chrome, firefox, edge, etc. | — |
 | `--proxy` | http://, socks5:// | — |
 

@@ -49,6 +49,7 @@ class Help:
         {CYAN}--codec=<format>{RESET}    {GRAY}Output format: m4a, mp3, opus, flac (default: m4a on macOS, opus otherwise){RESET}
         {CYAN}--kbps=<bitrate>{RESET}    {GRAY}Bitrate quality: 64-320 (default: 256){RESET}
         {CYAN}--quiet{RESET}             {GRAY}Suppress detailed logs, show only download progress and results (optional){RESET}
+        {CYAN}--max-concurrent=<num>{RESET} {GRAY}Maximum simultaneous downloads (default: 5){RESET}
         {CYAN}--cookies=<browser>{RESET} {GRAY}Browser for cookies: chrome, firefox, edge, safari, etc. (optional){RESET}
         {CYAN}--proxy=<url>{RESET}       {GRAY}Proxy URL (e.g., http://proxy:port or socks5://proxy:port){RESET}
     {GRAY}Examples:{RESET}

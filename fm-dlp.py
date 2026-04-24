@@ -56,6 +56,7 @@ def download(
     codec: Optional[str] = None,
     kbps: Optional[int] = 256,
     quiet: Optional[bool] = False,
+    max_concurrent: Optional[int] = 5,
     cookies: Optional[str] = None,
     proxy: Optional[str] = None,
 ):
@@ -68,6 +69,7 @@ def download(
                Defaults to "m4a" on macOS, "opus" on other platforms.
         kbps: Bitrate in kbps (default: 256)
         quiet: Suppress yt-dlp output, showing only download progress and results (default: False)
+        max_concurrent: Maximum simultaneous downloads (default: 5)
         cookies: Browser to extract cookies from - chrome, firefox, edge, etc. (optional)
         proxy: Proxy URL (e.g., http://proxy:port or socks5://proxy:port)
     """
@@ -76,11 +78,12 @@ def download(
 
     from modules.download import Download
 
-    program = Download(urls)
+    program = Download(urls, codec, kbps, quiet, max_concurrent, cookies, proxy)
 
     async def async_download_classic():
-        async for result in program.classic(codec, kbps, quiet, cookies, proxy):
+        async for result in program.main():
             print(result)
+
     try:
         asyncio.run(async_download_classic())
     except KeyboardInterrupt:
