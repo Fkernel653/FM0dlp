@@ -29,138 +29,51 @@ class Search:
         if self.type not in ("track", "album"):
             raise ValueError(f"Invalid type: {self.type}")
 
-    def extract_ytvideo_info(self, item) -> dict | None:
-        """Extract and format video information."""
-        id = item.get("id")
-        if not id:
-            return None
+    def _format_views(self, v) -> str:
+        return f"{int(v):,}" if v else "N/A"
 
-        return {
-            "title": item.get("title", "N/A"),
-            "artist": item.get("channel", "N/A"),
-            "views": self._format_views(item.get("view_count")),
-            "duration": self._format_duration(item.get("duration")),
-            "url": f"https://youtu.be/{id}",
-        }
-
-    def _format_views(self, view_count) -> str:
-        """Format view count with commas."""
-        if view_count:
-            return f"{int(view_count):,}"
-        return "N/A"
-
-    def _format_duration(self, raw_duration) -> str:
-        """Format duration to HH:MM:SS, MM:SS, or SS depending on length."""
-        if not raw_duration:
+    def _format_duration(self, d) -> str:
+        if not d:
             return "N/A"
-
-        total_seconds = int(raw_duration)
-
-        hours = total_seconds // 3600
-        minutes = (total_seconds % 3600) // 60
-        seconds = total_seconds % 60
-
-        if hours > 0:
-            return f"{hours}:{minutes:02d}:{seconds:02d}"
-        else:
-            return f"{minutes}:{seconds:02d}"
-
-    def extract_ytmusic_info(self, item) -> dict | None:
-        """Extract and format track information."""
-        match self.type:
-            case "track":
-                track_id = item.get("videoId")
-                if not track_id:
-                    return None
-
-                return {
-                    "title": item.get("title", "Unknown Track"),
-                    "artist": self._extract_artist(item),
-                    "views": item.get("views", "N/A"),
-                    "duration": item.get("duration", "N/A"),
-                    "url": f"https://music.youtube.com/watch?v={track_id}",
-                }
-
-            case "album":
-                pl_id = item.get("playlistId")
-                if not pl_id:
-                    return None
-
-                return {
-                    "title": item.get("title", "Unknown Track"),
-                    "artist": self._extract_artist(item),
-                    "year": item.get("year", "N/A"),
-                    "url": f"https://music.youtube.com/playlist?list={pl_id}",
-                }
+        s = int(d)
+        h, m, s = s // 3600, (s % 3600) // 60, s % 60
+        return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
 
     def _extract_artist(self, item) -> str:
-        """Extract artist name from track data."""
         artists = item.get("artists")
-        if artists and isinstance(artists, list):
-            return artists[0].get("name", "Unknown Artist")
-        return "Unknown Artist"
+        return artists[0].get("name", "Unknown Artist") if artists else "Unknown Artist"
 
-    def _format_ytvideo(
-        self, num, title, artist, views=None, duration=None, url=None
-    ) -> str:
-        """Format search result for display."""
-        return (
-            f"\n\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}\n"
-            f"   {GRAY}├─ {RESET}{artist}\n"
-            f"   {GRAY}├─ {RESET}{views} {SEPARATE} {duration}\n"
-            f"   {GRAY}└─ {RESET}{RED}{url}{RESET}\n"
-            f"{DIVIDER}"
-        )
-
-    def _format_ytmusic(
-        self, num, title, artist, views=None, duration=None, year=None, url=None
-    ) -> str:
-        """Format search result for display."""
-        match self.type:
-            case "track":
-                return (
-                    f"\n\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}\n"
-                    f"   {GRAY}├─ {RESET}{artist}\n"
-                    f"   {GRAY}├─ {RESET}{views} {SEPARATE} {duration}\n"
-                    f"   {GRAY}└─ {RESET}{RED}{url}{RESET}\n"
-                    f"{DIVIDER}"
-                )
-            case "album":
-                return (
-                    f"\n\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}\n"
-                    f"   {GRAY}├─ {RESET}{artist}\n"
-                    f"   {GRAY}├─ {RESET}{year}\n"
-                    f"   {GRAY}└─ {RESET}{RED}{url}{RESET}\n"
-                    f"{DIVIDER}"
-                )
-
-    def _yt_video_opts(self) -> dict:
-        return {
-            "proxy": self.proxy or None,
-            "quiet": True,
-            "extract_flat": True,
-            "cachedir": False,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["web"],
-                    "player_skip": ["configs", "js", "webpage", "authcheck"],
-                }
-            },
-        }
+    def _format_result(self, num, title, artist, url, **kwargs) -> str:
+        lines = [
+            f"\n\n{BOLD}{CYAN}{num}. {RESET}{BOLD}{title}{RESET}",
+            f"   {GRAY}├─ {RESET}{artist}",
+        ]
+        if self.type == "track":
+            lines.append(
+                f"   {GRAY}├─ {RESET}{kwargs.get('views', 'N/A')} {SEPARATE} {kwargs.get('duration', 'N/A')}"
+            )
+        else:
+            lines.append(f"   {GRAY}├─ {RESET}{kwargs.get('year', 'N/A')}")
+        lines.append(f"   {GRAY}└─ {RESET}{RED}{url}{RESET}\n{DIVIDER}")
+        return "\n".join(lines)
 
     def yt_video(self) -> Generator[str, None, None]:
         """Search YouTube videos using yt-dlp."""
         try:
-            match self.type:
-                case "track":
-                    search_type = "video"
-                case "album":
-                    search_type = "playlist"
-                case _:
-                    yield f"{RED}Unsupported type for yt_video: {self.type}{RESET}"
-                    return
-
-            with YoutubeDL(self._yt_video_opts()) as ydl:
+            search_type = "playlist" if self.type == "album" else "video"
+            opts = {
+                "proxy": self.proxy or None,
+                "quiet": True,
+                "extract_flat": True,
+                "cachedir": False,
+                "extractor_args": {
+                    "youtube": {
+                        "player_client": ["web"],
+                        "player_skip": ["configs", "js", "webpage", "authcheck"],
+                    }
+                },
+            }
+            with YoutubeDL(opts) as ydl:
                 videos = ydl.extract_info(
                     f"ytsearch{self.limit}:{search_type}:{self.query}", download=False
                 )["entries"]
@@ -169,46 +82,60 @@ class Search:
                 yield f"{RED}\nNo videos matching {RESET}'{self.query}'"
                 return
 
-            for num, video in enumerate(videos, 1):
-                if item := self.extract_ytvideo_info(video):
-                    yield self._format_ytvideo(num=num, **item)
+            for num, v in enumerate(videos, 1):
+                if id := v.get("id"):
+                    yield self._format_result(
+                        num,
+                        title=v.get("title", "N/A"),
+                        artist=v.get("channel", "N/A"),
+                        views=self._format_views(v.get("view_count")),
+                        duration=self._format_duration(v.get("duration")),
+                        url=f"https://youtu.be/{id}",
+                    )
 
         except KeyboardInterrupt:
             yield f"{GREEN}Goodbye!{RESET}"
         except Exception as e:
             yield f"{RED}Youtube-Video error: {e}{RESET}"
 
-    def _yt_music_kwargs(self) -> dict:
-        if self.proxy:
-            return {"proxies": {"http": self.proxy, "https": self.proxy}}
-        return {}
-
     def yt_music(self) -> Generator[str, None, None]:
         """Search YouTube Music for song tracks only."""
         try:
             from itertools import islice
 
-            yt = YTMusic(**self._yt_music_kwargs())
-
-            match self.type:
-                case "track":
-                    search_type = "songs"
-                case "album":
-                    search_type = "albums"
-                case _:
-                    yield f"{RED}Unsupported type for yt_music: {self.type}{RESET}"
-                    return
-
+            search_type = "albums" if self.type == "album" else "songs"
+            kwargs = (
+                {"proxies": {"http": self.proxy, "https": self.proxy}}
+                if self.proxy
+                else {}
+            )
+            yt = YTMusic(**kwargs)
             tracks = yt.search(query=self.query, limit=self.limit, filter=search_type)
 
             if not tracks:
                 yield f"{RED}\nNo tracks found for '{self.query}' on YouTube Music\n{RESET}"
                 return
 
-            tracks = islice(tracks, self.limit)
-            for num, track in enumerate(tracks, 1):
-                if item := self.extract_ytmusic_info(track):
-                    yield self._format_ytmusic(num=num, **item)
+            for num, t in enumerate(islice(tracks, self.limit), 1):
+                if self.type == "track":
+                    if id := t.get("videoId"):
+                        yield self._format_result(
+                            num,
+                            title=t.get("title", "Unknown Track"),
+                            artist=self._extract_artist(t),
+                            views=t.get("views", "N/A"),
+                            duration=t.get("duration", "N/A"),
+                            url=f"https://music.youtube.com/watch?v={id}",
+                        )
+                else:
+                    if pl_id := t.get("playlistId"):
+                        yield self._format_result(
+                            num,
+                            title=t.get("title", "Unknown Track"),
+                            artist=self._extract_artist(t),
+                            year=t.get("year", "N/A"),
+                            url=f"https://music.youtube.com/playlist?list={pl_id}",
+                        )
 
         except KeyboardInterrupt:
             yield f"{GREEN}Goodbye!{RESET}"

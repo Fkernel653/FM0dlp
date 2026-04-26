@@ -3,12 +3,10 @@ CLI entry point for fm-dlp using Clite library.
 Commands: search, download, config, help
 """
 
-import sys
-from typing import Optional
-import asyncio
-
 from clite import Clite
+from typing import Optional
 from modules.help import Help
+import sys
 
 fm_dlp = Clite(
     name="fm-dlp",
@@ -66,7 +64,7 @@ def download(
     Args:
         urls: Space-separated YouTube URLs
         codec: Output format - m4a, mp3, opus, flac.
-               Defaults to "m4a" on macOS, "opus" on other platforms.
+            Defaults to "m4a" on macOS, "opus" on other platforms.
         kbps: Bitrate in kbps (default: 256)
         quiet: Suppress yt-dlp output, showing only download progress and results (default: False)
         max_concurrent: Maximum simultaneous downloads (default: 5)
@@ -77,17 +75,18 @@ def download(
         codec = "m4a" if sys.platform == "darwin" else "opus"
 
     from modules.download import Download
+    import asyncio
 
     program = Download(urls, codec, kbps, quiet, max_concurrent, cookies, proxy)
 
     async def async_download_classic():
-        async for result in program.main():
-            print(result)
+        async for r in program:
+            print(r)
 
     try:
         asyncio.run(async_download_classic())
     except KeyboardInterrupt:
-        pass
+        print("\n\033[0;32mDownload interrupted. Goodbye!\033[0;0m")
 
 
 @fm_dlp.command()
@@ -109,8 +108,17 @@ def help():
     print(helper.command())
 
 
+def main():
+    """Main entry point with KeyboardInterrupt handling."""
+    try:
+        if len(sys.argv) == 1:
+            print(helper.file_run())
+        else:
+            fm_dlp()
+    except KeyboardInterrupt:
+        print("\n\033[0;32mGoodbye!\033[0;0m")
+        sys.exit(0)
+
+
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        print(helper.file_run())
-    else:
-        fm_dlp()
+    main()

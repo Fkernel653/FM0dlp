@@ -5,7 +5,7 @@ Persistent download path storage using JSON config file.
 
 from modules.colors import RESET, RED, GREEN
 from pathlib import Path
-import json
+from json import dump, load, JSONDecodeError
 
 
 def configer(path: str) -> None:
@@ -21,7 +21,7 @@ def configer(path: str) -> None:
     if path:
         config = {"path": str(path)}
         with open(config_file, "w", encoding="utf-8") as f:
-            json.dump(config, f, ensure_ascii=False, indent=4)
+            dump(config, f, ensure_ascii=False, indent=4)
         return f"{GREEN}Configuration saved successfully to: {RESET}{Path(config_file)}"
 
     # Getter mode
@@ -29,7 +29,7 @@ def configer(path: str) -> None:
         if config_file.exists():
             with open(config_file, "r", encoding="utf-8") as f:
                 try:
-                    data = json.load(f)
+                    data = load(f)
                     saved_path = data.get("path")
                     if saved_path and Path(saved_path).exists():
                         return (
@@ -41,7 +41,7 @@ def configer(path: str) -> None:
                             f"{RED}\nConfig file exists but the saved path is invalid or missing!\n{RESET}"
                         )
                         return exit(1)
-                except json.JSONDecodeError:
+                except JSONDecodeError:
                     print(
                         f"{RED}\nConfig file is corrupted! Please reconfigure with 'config <path>'.\n{RESET}"
                     )
