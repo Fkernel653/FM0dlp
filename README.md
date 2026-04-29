@@ -75,11 +75,6 @@ python fm-dlp.py config <path>   # Set directory
 python fm-dlp.py config          # Show current
 ```
 
-### `help` — Display documentation
-```bash
-python fm-dlp.py help
-```
-
 ## 📁 Project Structure
 ```
 fm-dlp/
