@@ -20,7 +20,7 @@ A powerful CLI tool for searching and downloading high-quality audio from YouTub
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+ & FFmpeg
+- Python 3.14+ & FFmpeg
 
 ### Installation
 
