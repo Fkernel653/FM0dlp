@@ -99,7 +99,8 @@ python fm-dlp.py config <path>   # Set directory
 fm-dlp/
 ├── fm-dlp.py           # CLI entry point
 ├── config.json         # Download path config
-├── requirements.txt    # Dependencies
+├── pyproject.toml      # Project metadata and dependencies
+├── README.md           # Project documentation
 └── modules/
     ├── search.py       # Search implementations (tracks & albums)
     ├── download.py     # Audio download logic
@@ -230,6 +231,13 @@ laws. Please support artists you enjoy.
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) file.
+
+## 🙏 Acknowledgments
+
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) — YouTube extraction & download engine
+- [ytmusicapi](https://github.com/sigma67/ytmusicapi) — YouTube Music API wrapper
+- [mutagen](https://github.com/quodlibet/mutagen) — Audio metadata tagging
+- [cyclopts](https://github.com/BrianPugh/cyclopts) — Modern CLI framework
 
 ## ⚠️ Disclaimer
 
