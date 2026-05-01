@@ -1,4 +1,0 @@
-﻿ytmusicapi
-cyclopts
-mutagen
-yt-dlp
