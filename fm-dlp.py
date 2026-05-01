@@ -8,7 +8,9 @@ from typing import Optional
 
 from cyclopts import App
 
-fm_dlp = App(name="fm-dlp", version="1.5.0")
+from modules.colors import GREEN, RESET
+
+fm_dlp = App(name="fm-dlp", version="1.5.3")
 
 
 @fm_dlp.command()
@@ -32,7 +34,7 @@ def search(
     try:
         from modules.search import Search
     except KeyboardInterrupt:
-        print("\n\033[0;32mGoodbye!\033[0;0m")
+        print(f"\n{GREEN}Goodbye!{RESET}")
         sys.exit(0)
 
     program = Search(query, limit, type, proxy)
@@ -78,7 +80,7 @@ def download(
     try:
         from modules.download import Download
     except KeyboardInterrupt:
-        print("\n\033[0;32mGoodbye!\033[0;0m")
+        print(f"\n{GREEN}Goodbye!{RESET}")
         sys.exit(0)
 
     program = Download(urls, codec, kbps, quiet, max_concurrent, cookies, proxy)
@@ -90,7 +92,7 @@ def download(
     try:
         asyncio.run(async_download_classic())
     except KeyboardInterrupt:
-        print("\n\033[0;32mDownload interrupted. Goodbye!\033[0;0m")
+        print(f"\n{GREEN}Download interrupted. Goodbye!{RESET}")
         sys.exit(0)
 
 
@@ -105,7 +107,7 @@ def config(path: str):
     try:
         from modules.configer import configer
     except KeyboardInterrupt:
-        print("\n\033[0;32mGoodbye!\033[0;0m")
+        print(f"\n{GREEN}Goodbye!{RESET}")
         sys.exit(0)
 
     print(configer(path))
@@ -115,7 +117,7 @@ def main():
     try:
         fm_dlp()
     except KeyboardInterrupt:
-        print("\n\033[0;32mGoodbye!\033[0;0m")
+        print(f"\n{GREEN}Goodbye!{RESET}")
         sys.exit(0)
 
 

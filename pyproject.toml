@@ -1,6 +1,6 @@
 [project]
 name = "fm-dlp"
-version = "1.5.0"
+version = "1.5.3"
 description = "fm-dlp — search engine and installer of videos/tracks from YouTube"
 readme = "README.md"
 requires-python = ">=3.14"
