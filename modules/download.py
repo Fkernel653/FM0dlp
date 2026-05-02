@@ -50,8 +50,8 @@ class Download:
                     "preferredcodec": self.codec,
                     "preferredquality": str(self.kbps),
                 },
-                {"key": "EmbedThumbnail"},
                 {"key": "FFmpegMetadata"},
+                {"key": "EmbedThumbnail"},
             ],
         }
         if self.proxy:
