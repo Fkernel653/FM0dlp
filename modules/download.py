@@ -51,6 +51,7 @@ class Download:
                     "preferredquality": str(self.kbps),
                 },
                 {"key": "EmbedThumbnail"},
+                {"key": "FFmpegMetadata"},
             ],
         }
         if self.proxy:
