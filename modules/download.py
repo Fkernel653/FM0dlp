@@ -42,6 +42,7 @@ class Download:
             "format": "bestaudio/best",
             "outtmpl": f"{self.download_path}/%(title)s.%(ext)s",
             "concurrent_fragment_downloads": self.max_concurrent,
+            "embedmetadata": True,
             "writethumbnail": True,
             "postprocessors": [
                 {
