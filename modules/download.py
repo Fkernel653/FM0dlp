@@ -40,7 +40,7 @@ class Download:
             "quiet": self.quiet,
             "no_warnings": True,
             "format": "bestaudio/best",
-            "outtmpl": f"{self.download_path}/%(title)s.{self.codec}",
+            "outtmpl": f"{self.download_path}/%(title)s.%(ext)s",
             "concurrent_fragment_downloads": self.max_concurrent,
             "writethumbnail": True,
             "postprocessors": [

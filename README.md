@@ -104,7 +104,6 @@ fm-dlp/
 └── modules/
     ├── search.py       # Search implementations (tracks & albums)
     ├── download.py     # Audio download logic
-    ├── add_metadata.py # Tagging handler
     ├── configer.py     # Config manager
     └── colors.py       # Terminal colors
 ```
@@ -114,7 +113,6 @@ fm-dlp/
 | Dependency | Purpose |
 |------------|---------|
 | `yt-dlp` | YouTube extraction & download |
-| `mutagen` | Audio metadata tagging |
 | `ytmusicapi` | YouTube Music API |
 | `cyclopts` | CLI framework |
 | **FFmpeg** | Audio conversion (system) |
@@ -164,7 +162,7 @@ python fm-dlp.py download "https://music.youtube.com/playlist?list=OLAK5uy_muvgx
 
 # 4. Or search and download tracks directly
 python fm-dlp.py search "goreshit" --platform yt-video
-python fm-dlp.py download "https://youtu.be/..." --codec mp3 --kbps 320
+python fm-dlp.py download "https://youtu.be/gnubBJ6dP4g" --codec mp3 --kbps 320
 ```
 
 ## ❓ FAQ
@@ -236,7 +234,6 @@ MIT License — see [LICENSE](LICENSE) file.
 
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) — YouTube extraction & download engine
 - [ytmusicapi](https://github.com/sigma67/ytmusicapi) — YouTube Music API wrapper
-- [mutagen](https://github.com/quodlibet/mutagen) — Audio metadata tagging
 - [cyclopts](https://github.com/BrianPugh/cyclopts) — Modern CLI framework
 
 ## ⚠️ Disclaimer

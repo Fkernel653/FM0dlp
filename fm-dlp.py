@@ -4,15 +4,16 @@ Commands: search, download, config
 """
 
 import sys
-from typing import Optional
 
 from modules.colors import GREEN, RESET
 
 
 def main():
+    from typing import Optional
+
     from cyclopts import App
 
-    fm_dlp = App(name="fm-dlp", version="1.5.3")
+    fm_dlp = App(name="fm-dlp", version="1.7.0")
 
     @fm_dlp.command()
     def search(
@@ -49,17 +50,12 @@ def main():
         if codec is None:
             codec = "m4a" if sys.platform == "darwin" else "opus"
 
-        import asyncio
+        from asyncio import run
 
         from modules.download import Download
 
         program = Download(urls, codec, kbps, quiet, max_concurrent, cookies, proxy)
-
-        async def async_download_classic():
-            async for r in program:
-                print(r)
-
-        asyncio.run(async_download_classic())
+        run(program.download_all())
 
     @fm_dlp.command()
     def config(path: str):
