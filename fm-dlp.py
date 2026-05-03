@@ -64,6 +64,17 @@ def main():
 
         print(configer(path))
 
+    @fm_dlp.command()
+    def update():
+        """Update fm-dlp to the latest stable version.
+
+        Pulls the latest changes from the remote Git repository.
+        Requires Git to be installed and accessible in PATH.
+        """
+        from modules.update import update_project
+
+        print(update_project())
+
     fm_dlp()
 
 
