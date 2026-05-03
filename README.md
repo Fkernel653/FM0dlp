@@ -1,6 +1,6 @@
 # fm-dlp — search engine and installer of videos/tracks from YouTube
 
-[![Python](https://img.shields.io/badge/python-3.14+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-lightgrey)]()
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-261230?logo=ruff&logoColor=white)](https://docs.astral.sh/ruff/)
@@ -21,7 +21,7 @@ A powerful CLI tool for searching and downloading high-quality audio from YouTub
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.14+ & FFmpeg & Git
+- Python 3.10+ & FFmpeg & Git
 
 ### Installation
 

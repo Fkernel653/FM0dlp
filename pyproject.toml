@@ -3,7 +3,7 @@ name = "fm-dlp"
 version = "1.7.4"
 description = "fm-dlp — search engine and installer of videos/tracks from YouTube"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "ytmusicapi",
     "cyclopts",
