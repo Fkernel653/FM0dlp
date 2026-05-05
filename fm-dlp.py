@@ -5,9 +5,6 @@ Commands: search, download, config
 
 import sys
 
-from modules.colors import GREEN, RESET
-
-
 def main():
     from typing import Optional
 
@@ -82,5 +79,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
+        from modules.colors import GREEN, RESET
+
         print(f"\n{GREEN}Goodbye!{RESET}")
         sys.exit(0)
