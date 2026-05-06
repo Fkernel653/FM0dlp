@@ -103,7 +103,7 @@ class Download:
 
     def __del__(self):
         if hasattr(self, "_executor"):
-            self._executor.shutdown(wait=False, cancel_futures=True)ы
+            self._executor.shutdown(wait=False, cancel_futures=True)
 
     async def __aiter__(self):
         urls = [u.strip() for u in self.urls.replace(",", " ").split() if u.strip()]
