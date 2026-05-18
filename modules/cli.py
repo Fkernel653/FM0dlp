@@ -49,10 +49,10 @@ def main():
                 yt-music: http, https only
                 Example: 'socks5://127.0.0.1:9050'
         """
-        from modules.commands.search import Search
-        from modules.utils.validator import validate_input
-
         try:
+            from modules.commands.search import Search
+            from modules.utils.validator import validate_input
+
             validate_input(
                 limit=limit,
                 platform=platform,
