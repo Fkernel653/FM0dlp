@@ -19,13 +19,12 @@ Download and tag high-quality music and video from YouTube, YouTube Music, and 1
 - **Metadata Embedding** — Title, artist, album tags + thumbnail (audio only)
 - **Proxy Support** — HTTP, HTTPS, SOCKS4, SOCKS5, SOCKS5h for all requests (download supports all protocols; search via yt-music requires HTTP/HTTPS)
 - **Cookie Support** — Browser cookies for restricted content
-- **Self-updating** — Built-in update mechanism via Git
 - **Cross-platform Config** — Stores config in standard app config directory (XDG, AppData, Application Support)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+ & FFmpeg & Git (Git only required for `update` command)
+- Python 3.10+ & FFmpeg
 
 ### Installation
 
@@ -167,12 +166,6 @@ Configuration is stored in the standard application config directory:
 - **macOS:** `~/Library/Application Support/fm-dlp/config.json`
 - **Windows:** `%APPDATA%\fm-dlp\config.json`
 
-### `update` — Update the tool
-```bash
-fm-dlp update          # Pull latest version via Git
-```
-Requires Git to be installed and the project to be a clone of the repository. Not available when installed via pip — use `pip install --upgrade fm-dlp` instead.
-
 ## 📁 Project Structure
 ```
 fm-dlp/
@@ -187,8 +180,7 @@ fm-dlp/
 │       ├── __init__.py
 │       ├── configer.py      # JSON config manager (read/write)
 │       ├── validator.py     # Input validation (URLs, codecs, proxies, bitrate)
-│       │                    # + system dependency checks (ffmpeg, git)
-│       ├── update.py        # Self-update via Git (fetch + hard reset)
+│       │                    # + system dependency checks (ffmpeg)
 │       └── colors.py        # Terminal ANSI color constants
 ├── pyproject.toml           # Project metadata & dependencies
 ├── README.md                # Project documentation
@@ -207,7 +199,6 @@ fm-dlp/
 | `cyclopts` | CLI framework |
 | `platformdirs` | Cross-platform config paths |
 | **FFmpeg** | Audio/video conversion (system) |
-| **Git** | Self-update mechanism (system, optional) |
 
 ## 📖 Examples
 
@@ -266,11 +257,8 @@ fm-dlp download "URL1 URL2 URL3 URL4 URL5" --quiet --max-concurrent 10
 
 ### Maintenance
 ```bash
-# Update to latest version (pip installation)
+# Update to latest version
 pip install --upgrade fm-dlp
-
-# Update to latest version (git clone)
-fm-dlp update
 ```
 
 ### Complete Workflow
@@ -345,16 +333,6 @@ Metadata embedding (title, artist, album, thumbnail) works only with audio codec
 Video containers don't get automatic metadata tagging — this keeps the download
 fast and avoids potential issues with video metadata standards.
 
-### How does the update command work?
-
-When installed via pip, use `pip install --upgrade fm-dlp` to update.
-
-When installed from a Git clone, `fm-dlp update` runs `git pull` inside the project directory. This means:
-- You must have **Git installed** and accessible from the terminal
-- The project must be a **Git clone** (not a downloaded ZIP)
-- It pulls the latest commits from the remote repository
-- No version checking or rollback — it's intentionally simple and transparent
-
 ### Why write this in Python instead of something faster?
 
 The initial version was a personal script that solved a daily annoyance: finding
@@ -387,7 +365,6 @@ laws. Please support artists you enjoy.
 | Issue | Solution |
 |-------|----------|
 | **"FFmpeg is not installed"** | Install FFmpeg and verify: `ffmpeg -version`<br>• macOS: `brew install ffmpeg`<br>• Linux: `sudo apt install ffmpeg`<br>• Windows: `winget install ffmpeg` |
-| **"Git is not installed"** | Required only for `update` command: `git --version` |
 
 ### Search Issues
 | Issue | Solution |
@@ -406,12 +383,6 @@ laws. Please support artists you enjoy.
 | **Video format not supported** | Supported containers: `mp4`, `mkv`, `webm`, `mov`, `avi`, `flv` |
 | **WAV has no metadata** | WAV doesn't support embedded tags. Use `flac` or `m4a` instead |
 | **Codec not available** | yt-dlp selects best available. Try `opus` (best quality) or `mp3` (compatibility) |
-
-### Update Issues
-| Issue | Solution |
-|-------|----------|
-| **"Not a git repository"** | `update` only works if installed via `git clone`. Use `pip install --upgrade fm-dlp` for pip installations |
-| **Update fails** | Check internet connection. Force update: `git -C /path/to/fm-dlp fetch origin && git -C /path/to/fm-dlp reset --hard origin/main` |
 
 ### Proxy
 | Issue | Solution |
