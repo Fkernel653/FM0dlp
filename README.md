@@ -358,7 +358,6 @@ laws. Please support artists you enjoy.
 |-------|----------|
 | **"FFmpeg is not installed"** | Install FFmpeg and verify: `ffmpeg -version`<br>• macOS: `brew install ffmpeg`<br>• Linux: `sudo apt install ffmpeg`<br>• Windows: `winget install ffmpeg` |
 | **"Git is not installed"** | Required only for `update` command: `git --version` |
-| **"yt-dlp is not installed"** | Should be auto-installed. If not: `pip install yt-dlp` |
 
 ### Search Issues
 | Issue | Solution |
