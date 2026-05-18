@@ -21,7 +21,7 @@ def main():
 
     fm_dlp = App(
         name="fm-dlp",
-        version="2.3.2",
+        version="2.3.3",
         help="fm-dlp is a CLI tool for searching YouTube/YTMusic and downloading audio/video from 1000+ platforms",
     )
 
