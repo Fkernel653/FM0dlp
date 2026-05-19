@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fm-dlp"
-version = "3.1.1"
+version = "3.2.0"
 description = "fm-dlp is a CLI tool for searching YouTube/YTMusic and downloading audio/video from 1000+ platforms"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "cyclopts",
     "yt-dlp",
     "ytmusicapi",
     "mutagen",
     "platformdirs",
+    "color-kiss",
 ]
 
 [project.scripts]
