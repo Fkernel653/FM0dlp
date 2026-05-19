@@ -5,9 +5,43 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fm-dlp"
 version = "3.4.1"
-description = "fm-dlp is a CLI tool for searching YouTube/YTMusic and downloading audio/video from 1000+ platforms"
+description = "CLI tool for searching YouTube/YTMusic and downloading audio/video from 1000+ platforms"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Fkernel653"}
+]
+keywords = [
+    "youtube",
+    "ytmusic",
+    "downloader",
+    "audio",
+    "video",
+    "yt-dlp",
+    "cli",
+    "youtube-music",
+    "mp3",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Utilities",
+]
+
 dependencies = [
     "yt-dlp",
     "ytmusicapi",
@@ -17,12 +51,25 @@ dependencies = [
     "cliss",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+
+[project.urls]
+Homepage = "https://github.com/Fkernel653/fm-dlp"
+Repository = "https://github.com/Fkernel653/fm-dlp.git"
+Documentation = "https://github.com/Fkernel653/fm-dlp#readme"
+
 [project.scripts]
 fm-dlp = "modules.cli:main"
-
 
 [tool.setuptools.packages.find]
 include = ["modules*"]
 
 [tool.setuptools.package-data]
 modules = ["*.json"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
