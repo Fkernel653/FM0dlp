@@ -117,19 +117,29 @@ wheels = [
 ]
 
 [[package]]
-name = "color-kiss"
-version = "0.1.2"
+name = "cliss"
+version = "0.1.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d0/41/589e439fbc9422250d2573df2803bd83fe192fd60ff0f3c307b8173b746f/color_kiss-0.1.2.tar.gz", hash = "sha256:576b28321768ff66624680cd2bb562811dffb9e20f4e2074095efc7006e908bf", size = 6218, upload-time = "2026-05-18T16:12:55.268Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/97/fe/eb022f85d85094a9cbf58041fc801b2ceac3cf574f0c568b3e27933c7974/cliss-0.1.3.tar.gz", hash = "sha256:8780e5af78a211b32c5763039c57541077b84cae5f0bff8f3b3141b827403a38", size = 9274, upload-time = "2026-05-19T13:59:38.192Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/de/dc048f3564406a690be86d6525c009e47437e829b67cbd2e457572bb4df0/color_kiss-0.1.2-py3-none-any.whl", hash = "sha256:12786a35a2d7a3fd7b1a2f9754578bd800c5fd74eb04140da5456d7efe8f89fb", size = 6512, upload-time = "2026-05-18T16:12:53.901Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/51/d8e851c935b623b57302eff674606f416e22491e873f82b25015d2ffa169/cliss-0.1.3-py3-none-any.whl", hash = "sha256:4e0c89ede84f02b976fac23f0d19ea5aadc1dc54107447090d33e0d13b8f6e7b", size = 9337, upload-time = "2026-05-19T13:59:36.967Z" },
+]
+
+[[package]]
+name = "color-kiss"
+version = "0.1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/b3/551dd5a37645a28ae68b543a285a614bbca465b0d36f812981696be6be1a/color_kiss-0.1.3.tar.gz", hash = "sha256:e1de99813ba68bd7a3dd60a83fd55683ffd92a3e9bbafe349ad7be0933251e43", size = 6225, upload-time = "2026-05-18T16:23:16.098Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b9/b1/7b49320ed18cc87ed4034da12a71d52849e69429961fdcaffda1f636fe15/color_kiss-0.1.3-py3-none-any.whl", hash = "sha256:c2ce2604dcf3db592fe9ea16b8b931d3712786224ff3355371a628d5c7db03ef", size = 6511, upload-time = "2026-05-18T16:23:14.874Z" },
 ]
 
 [[package]]
 name = "fm-dlp"
-version = "3.2.0"
+version = "3.3.0"
 source = { editable = "." }
 dependencies = [
+    { name = "cliss" },
     { name = "color-kiss" },
     { name = "mutagen" },
     { name = "platformdirs" },
@@ -139,6 +149,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cliss" },
     { name = "color-kiss" },
     { name = "mutagen" },
     { name = "platformdirs" },

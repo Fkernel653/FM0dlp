@@ -172,9 +172,8 @@ Configuration is stored in the standard application config directory:
 fm-dlp/
 ├── modules/
 │   ├── __init__.py          # Package initializer
-│   ├── cli.py               # CLI entry point (argparse)
-│   ├── parser.py            # Argument parser configuration
-│   ├── handlers.py          # Command handlers
+│   ├── __main__.py          # CLI entry point
+│   ├── cli.py               # CLI entry point (cliss library)
 │   ├── commands/
 │   │   ├── __init__.py
 │   │   ├── search.py        # YouTube & YT Music search (tracks & albums)
@@ -200,6 +199,7 @@ fm-dlp/
 | `ytmusicapi` | YouTube Music API |
 | `platformdirs` | Cross-platform config paths |
 | `color-kiss` | KISS-library for colors |
+| `cliss` | KISS-library for CLI |
 | **FFmpeg** | Audio/video conversion (system) |
 
 ## 📖 Examples
@@ -352,14 +352,16 @@ language.
 
 ### How does the CLI argument parsing work?
 
-fm-dlp uses Python's standard library `argparse` for command-line argument parsing. This provides:
-- Subcommand support (`search`, `download`, `config`)
-- Short and long option forms (e.g., `-l` and `--limit`)
-- Automatic help generation (`fm-dlp --help`, `fm-dlp search --help`)
-- Type validation for numeric arguments
-- Choice constraints for enumerated options (platforms, codecs, etc.)
+fm-dlp uses [cliss](https://github.com/Fkernel653/cliss) — a lightweight, zero-dependency
+wrapper over Python's standard `argparse` library. cliss provides:
 
-This keeps the dependency footprint minimal while providing a robust and familiar CLI interface.
+- Type-driven argument generation from function signatures
+- Automatic `--help` with colours (Python 3.12+)
+- Async command support
+- Clean error handling
+
+This keeps the dependency footprint minimal (stdlib only) while eliminating
+argparse boilerplate.
 
 ### Does this break YouTube's Terms of Service?
 
@@ -430,6 +432,7 @@ MIT License — see [LICENSE](LICENSE) file.
 - [mutagen](https://github.com/quodlibet/mutagen) — Audio metadata tagging
 - [platformdirs](https://github.com/platformdirs/platformdirs) — Cross-platform config directory detection
 - [color-kiss](https://github.com/Fkernel653/color-kiss) — KISS-library for colors
+- [cliss](https://github.com/Fkernel653/cliss) — KISS-library for CLI
 
 ## ⚠️ Disclaimer
 
